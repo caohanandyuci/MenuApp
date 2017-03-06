@@ -8,6 +8,7 @@ import com.ch.menuapp.R;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
+import android.graphics.Color;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -42,6 +43,13 @@ public class LeftAdapter extends BaseAdapter {
 		return position;
 	}
 
+	private int selectItem = 0;
+	public int getSelectItem() {
+		return selectItem;
+		}
+		public void setSelectItem(int selectItem) {
+		this.selectItem = selectItem;
+		}
 
 	@SuppressLint("ViewHolder") public View getView(int position, View convertView, ViewGroup parent) {
 		// TODO Auto-generated method stub
@@ -53,6 +61,11 @@ public class LeftAdapter extends BaseAdapter {
 		convertView=LayoutInflater.from(mContext).inflate(R.layout.product_list,null);
 		TextView textView = (TextView) convertView.findViewById(R.id.name);
 		textView.setText(list.get(position).nameString);
+		if(position == selectItem){
+			textView.setBackgroundColor(Color.RED);
+			}else {
+			textView.setBackgroundColor(Color.WHITE);
+			}
 		convertView.setBackgroundDrawable(mContext.getResources().getDrawable(R.layout.list_item_selector));
 		return convertView;
 	}
