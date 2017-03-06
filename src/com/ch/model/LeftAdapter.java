@@ -52,7 +52,8 @@ public class LeftAdapter extends BaseAdapter {
 		//}
 		convertView=LayoutInflater.from(mContext).inflate(R.layout.product_list,null);
 		TextView textView = (TextView) convertView.findViewById(R.id.name);
-		textView.setText("ceshis");
+		textView.setText(list.get(position).nameString);
+		convertView.setBackgroundDrawable(mContext.getResources().getDrawable(R.layout.list_item_selector));
 		return convertView;
 	}
 	

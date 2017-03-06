@@ -51,6 +51,10 @@ public class RightAdapter extends BaseAdapter {
 		// TODO Auto-generated method stub
 		convertView=LayoutInflater.from(mContext).inflate(R.layout.product,null);
 		ImageView imageView = (ImageView) convertView.findViewById(R.id.productbg);
+		ImageView addviewImageView = (ImageView) convertView.findViewById(R.id.addbg);
+		addviewImageView.setBackground(mContext.getResources().getDrawable(R.drawable.add));
+		ImageView subviewImageView = (ImageView) convertView.findViewById(R.id.subbg);
+		subviewImageView.setBackground(mContext.getResources().getDrawable(R.drawable.sub));
 		imageView.setImageDrawable(mContext.getResources().getDrawable(R.drawable.timg));
 		return convertView;
 	}

@@ -13,6 +13,7 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.AdapterView;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
@@ -26,14 +27,26 @@ public class MainActivity extends Activity {
         setContentView(R.layout.activity_main);
         this.leftListView = (ListView) findViewById(R.id.left);
         this.rightListView = (ListView) findViewById(R.id.right);
-       
-        for(int i=0;i<100;i++){
+        String[] list = {"干锅","凉菜","热菜","汤","粥","蒸菜","特价菜","套餐"};
+        for(int i=0;i<list.length;i++){
         	Product product = new Product();
-        	product.nameString = "ceshi";
+        	product.nameString = list[i];
         	this.mProductList.add(product);
         }
         rightAdapter = new RightAdapter(this, this.mProductList);
         leftAdapter = new LeftAdapter(this, this.mProductList);
+        this.leftListView.setOnItemClickListener(new ListView.OnItemClickListener() {    
+            
+            @Override    
+            public void onItemClick(AdapterView<?> arg0, View arg1, int arg2,    
+                    long arg3) {    
+                // TODO Auto-generated method stub    
+            	     //leftAdapter.setSelectedPosition(arg2);    
+                     
+                //listAdapter.notifyDataSetInvalidated();       
+    
+            }    
+        });    
         Log.d("TAG","mproduct:"+this.mProductList.size());
         this.leftListView.setAdapter(leftAdapter);
         this.rightListView.setAdapter(rightAdapter);
