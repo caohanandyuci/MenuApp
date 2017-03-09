@@ -8,41 +8,58 @@
     android:paddingTop="@dimen/activity_vertical_margin"
     tools:context="com.ch.menuapp.MainActivity" >
 
-    <!-- TextView
+    <!--
+         TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="@string/hello_world" /-->
-    <!--  fragment
+        android:text="@string/hello_world" /
+    -->
+    <!--
+          fragment
         android:name="com.ch.widget.ProductFragment"
         android:id="@+id/productfragment"
         android:layout_width="300dp"
         android:layout_height="500dp"
-        android:background="#ffff00"/-->
+        android:background="#ffff00"/
+    -->
 
-        <LinearLayout
-            android:layout_width="match_parent"
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="horizontal" >
+
+        <ListView
+            android:id="@+id/left"
+            android:layout_width="0dp"
             android:layout_height="match_parent"
-            android:orientation="horizontal">
-            <ListView
-                android:id="@+id/left"
-                android:scrollbars="none"
-                android:layout_width="0dp"
-                android:layout_height="match_parent"
-                android:layout_weight="1"
-                android:background="#00BFFF"
-                android:dividerHeight="20dp"
-                android:divider="@null"
-                android:orientation="vertical" />
-            
+            android:layout_weight="1"
+            android:background="#00BFFF"
+            android:divider="@null"
+            android:dividerHeight="20dp"
+            android:orientation="vertical"
+            android:scrollbars="none" />
 
-            <ListView
+        <!--
+                ListView
                 android:id="@+id/right"
                 android:scrollbars="none"
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
                 android:layout_weight="3"
                 android:background="#00FFFF"
-                android:orientation="vertical" />
-        </LinearLayout>
+                android:orientation="vertical" /-->
+
+        <se.emilsjolander.stickylistheaders.StickyListHeadersListView
+            android:id="@+id/rightlist"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="3"
+            android:clipToPadding="false"
+            android:drawSelectorOnTop="true"
+            android:fastScrollEnabled="true"
+            android:overScrollMode="never"
+            android:padding="16dp"
+            android:scrollbarStyle="outsideOverlay" />
+    </LinearLayout>
 
 </RelativeLayout>
