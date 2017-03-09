@@ -16,3 +16,48 @@ public class Product {
 	public int mCategory = 0;
 	
 }
+public static List<Product> getTestData(){
+		List<Product> mList = new ArrayList<Product>();
+		int index = 0;
+		for(int i=0;i<10;i++){
+			index++;
+			Product product = new Product();
+			product.mID =index;
+			product.mDescirption = "test"+String.valueOf(index);
+			product.mProductName = "qiezi"+String.valueOf(index);
+			product.mPrice = index;
+			product.mCategory = 1;
+			mList.add(product);
+		}
+		for(int i=0;i<10;i++){
+			index++;
+			Product product = new Product();
+			product.mID =index;
+			product.mDescirption = "test"+String.valueOf(index);
+			product.mProductName = "doujiao"+String.valueOf(index);
+			product.mPrice = index;
+			product.mCategory = 2;
+			mList.add(product);
+		}
+		for(int i=0;i<10;i++){
+			index++;
+			Product product = new Product();
+			product.mID =index;
+			product.mDescirption = "test"+String.valueOf(index);
+			product.mProductName = "miantiao"+String.valueOf(index);
+			product.mPrice = index;
+			product.mCategory = 3;
+			mList.add(product);
+		}
+		for(int i=0;i<10;i++){
+			index++;
+			Product product = new Product();
+			product.mID =index;
+			product.mDescirption = "test"+String.valueOf(index);
+			product.mProductName = "daimai"+String.valueOf(index);
+			product.mPrice = index;
+			product.mCategory = 4;
+			mList.add(product);
+		}
+		return mList;
+	}
