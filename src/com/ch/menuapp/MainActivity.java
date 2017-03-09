@@ -26,14 +26,31 @@ public class MainActivity extends Activity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         this.leftListView = (ListView) findViewById(R.id.left);
-        this.rightListView = (ListView) findViewById(R.id.right);
+        
+        List<Product> mList = Product.getTestData();
+        
+        rightAdapter = new RightAdapter(this,mList);
+        stickyList = (StickyListHeadersListView) findViewById(R.id.rightlist);
+//		stickyList.setOnItemClickListener(this);
+//		stickyList.setOnHeaderClickListener(this);
+//		stickyList.setOnStickyHeaderChangedListener(this);
+//		stickyList.setOnStickyHeaderOffsetChangedListener(this);
+		stickyList.addHeaderView(getLayoutInflater().inflate(
+				R.layout.list_header, null));
+		stickyList.addFooterView(getLayoutInflater().inflate(
+				R.layout.list_footer, null));
+		stickyList.setEmptyView(findViewById(R.id.empty));
+		stickyList.setDrawingListUnderStickyHeader(true);
+		stickyList.setAreHeadersSticky(true);
+		stickyList.setAdapter(rightAdapter);
+//		stickyList.setOnTouchListener(this);
         String[] list = {"干锅","凉菜","热菜","汤","粥","蒸菜","特价菜","套餐"};
         for(int i=0;i<list.length;i++){
         	Product product = new Product();
         	product.nameString = list[i];
         	this.mProductList.add(product);
         }
-        rightAdapter = new RightAdapter(this, this.mProductList);
+        
         leftAdapter = new LeftAdapter(this, this.mProductList);
         this.leftListView.setOnItemClickListener(new ListView.OnItemClickListener() {    
             
@@ -49,14 +66,14 @@ public class MainActivity extends Activity {
         });    
         Log.d("TAG","mproduct:"+this.mProductList.size());
         this.leftListView.setAdapter(leftAdapter);
-        this.rightListView.setAdapter(rightAdapter);
+        //this.rightListView.setAdapter(rightAdapter);
     }
     public final static class ViewHolder {
         TextView tvTag;
         TextView tvSection;
     }
     
-    private ListView rightListView;          //右侧商品listview
+    private StickyListHeadersListView stickyList;          //右侧商品listview
     private ListView leftListView;   //左侧--商品类型listview
     private RightAdapter rightAdapter;   //右侧adapter
     private LeftAdapter leftAdapter;  //左侧adapter
@@ -90,4 +107,3 @@ public class MainActivity extends Activity {
         }
         return super.onOptionsItemSelected(item);
     }
-}
