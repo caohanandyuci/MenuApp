@@ -1,18 +1,31 @@
 package com.ch.model;
 
+import java.util.ArrayList;
 import java.util.List;
 
+import se.emilsjolander.stickylistheaders.StickyListHeadersAdapter;
+
+import com.ch.entity.Order;
 import com.ch.entity.Product;
+import com.ch.menuapp.MainActivity;
 import com.ch.menuapp.R;
 
+import android.R.integer;
+import android.R.raw;
 import android.annotation.SuppressLint;
 import android.content.Context;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
+import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
+import android.widget.SectionIndexer;
 import android.widget.TextView;
+import android.widget.Toast;
 
 
 
@@ -25,11 +38,25 @@ public class RightAdapter extends BaseAdapter implements StickyListHeadersAdapte
 	private LayoutInflater mInflater;
 
 	private List<Product> mProducts = null;
+	private List<Order> mOrders = new ArrayList<Order>(100);
+	
+	private ProductListener mProductListener = null;
+	public void setProductListener(ProductListener listener){
+		this.mProductListener = listener;
+	}
 	
 	public RightAdapter(Context context,List<Product> products) {
 		mContext = context;
 		mInflater = LayoutInflater.from(context);
 		mProducts = products;
+		mOrders.clear();
+		for(Product product:mProducts){
+			Order order = new Order();
+			order.mNumber = 0;
+			order.mOrderID = product.mID;
+			order.mPrice = product.mPrice;
+			mOrders.add(order);
+		}
 		mCountries = context.getResources().getStringArray(R.array.countries);
 		mSectionIndices = getSectionIndices();
 		mSectionLetters = getSectionLetters();
@@ -62,12 +89,12 @@ public class RightAdapter extends BaseAdapter implements StickyListHeadersAdapte
 
 	@Override
 	public int getCount() {
-		return mCountries.length;
+		return mProducts.size();
 	}
 
 	@Override
 	public Object getItem(int position) {
-		return mCountries[position];
+		return mProducts.get(position);
 	}
 
 	@Override
@@ -79,15 +106,95 @@ public class RightAdapter extends BaseAdapter implements StickyListHeadersAdapte
 	public View getView(int position, View convertView, ViewGroup parent) {
 		convertView = LayoutInflater.from(mContext).inflate(R.layout.product, null);
 		ImageView imageView = (ImageView) convertView.findViewById(R.id.productbg);
-		ImageView addviewImageView = (ImageView) convertView.findViewById(R.id.addbg);
-		addviewImageView.setBackground(mContext.getResources().getDrawable(R.drawable.add));
-		ImageView subviewImageView = (ImageView) convertView.findViewById(R.id.subbg);
-		subviewImageView.setBackground(mContext.getResources().getDrawable(R.drawable.sub));
+		Button addviewbutton = (Button) convertView.findViewById(R.id.addbg);
+		addviewbutton.setTag(position);
+		addviewbutton.setOnClickListener(mAddOnClickListener);
+		addviewbutton.setBackground(mContext.getResources().getDrawable(R.drawable.add));
+		Button subviewbutton = (Button) convertView.findViewById(R.id.subbg);
+		subviewbutton.setBackground(mContext.getResources().getDrawable(R.drawable.sub));
+		subviewbutton.setOnClickListener(mSubOnClickListener);
+		subviewbutton.setTag(position);
 		imageView.setImageDrawable(mContext.getResources().getDrawable(R.drawable.timg));
+		subviewbutton.setVisibility(View.INVISIBLE);
+		TextView textView = (TextView) convertView.findViewById(R.id.product_count);
+		textView.setVisibility(View.INVISIBLE);
 		return convertView;
 
 	}
 
+	private OnClickListener mSubOnClickListener = new OnClickListener() {
+
+		@Override
+		public void onClick(View v) {
+			// TODO Auto-generated method stub
+			if(v!=null){
+				int position = (Integer) v.getTag();
+				Order order = mOrders.get(position);
+				order.mNumber--;
+				if(order.mNumber<0){
+					order.mNumber =0;
+				}
+				LinearLayout parent = (LinearLayout) v.getParent();
+				Log.d("RightAdapter", "order.mNumber:"+order.mNumber);
+				if(order.mNumber==0){
+					parent.getChildAt(0).setVisibility(View.INVISIBLE);
+					parent.getChildAt(1).setVisibility(View.INVISIBLE);
+					((TextView)parent.getChildAt(1)).setText(String.valueOf(order.mNumber));
+				}
+				((TextView)parent.getChildAt(1)).setText(String.valueOf(order.mNumber));
+				
+				if(mProductListener!=null){
+					float totalprice = 0.0f;
+					for(Order o:mOrders){
+						totalprice += o.mPrice*o.mNumber;
+					}
+					mProductListener.PriceChanged(totalprice);
+				}
+				
+				
+			}
+			
+			Toast tst = Toast.makeText(mContext, v.getTag().toString(), Toast.LENGTH_SHORT);
+	        tst.show();
+		}
+
+	};
+	
+	private OnClickListener mAddOnClickListener = new OnClickListener() {
+
+		@Override
+		public void onClick(View v) {
+			// TODO Auto-generated method stub
+			
+			if(v!=null){
+				int position = (Integer) v.getTag();
+				Log.d("RightAdapter", "position:"+position+",,,v:"+v);
+				Order order = mOrders.get(position);
+				order.mNumber++;
+				LinearLayout parent = (LinearLayout) v.getParent();
+				Log.d("RightAdapter", "order.mNumber:"+order.mNumber);
+				if(order.mNumber>0){
+					parent.getChildAt(0).setVisibility(View.VISIBLE);
+					parent.getChildAt(1).setVisibility(View.VISIBLE);
+					((TextView)parent.getChildAt(1)).setText(String.valueOf(order.mNumber));
+				}
+				
+				if(mProductListener!=null){
+					float totalprice = 0.0f;
+					for(Order o:mOrders){
+						totalprice += o.mPrice*o.mNumber;
+					}
+					mProductListener.PriceChanged(totalprice);
+				}
+				
+				Toast tst = Toast.makeText(mContext, v.getTag().toString(), Toast.LENGTH_SHORT);
+		        tst.show();
+			}
+		}
+
+	};
+	
+	
 	@Override
 	public View getHeaderView(int position, View convertView, ViewGroup parent) {
 		HeaderViewHolder holder;
@@ -104,7 +211,7 @@ public class RightAdapter extends BaseAdapter implements StickyListHeadersAdapte
 		//CharSequence headerChar = mCountries[position].subSequence(0, 1);
 		//holder.text.setText(headerChar);
 
-		String category = "this is category:"+mProducts.get(position).mCategory;
+		String category = Product.list[mProducts.get(position).mCategory];
 		holder.text.setText(category);
 		return convertView;
 	}
@@ -161,3 +268,4 @@ public class RightAdapter extends BaseAdapter implements StickyListHeadersAdapte
 	class ViewHolder {
 		TextView text;
 	}
+}
