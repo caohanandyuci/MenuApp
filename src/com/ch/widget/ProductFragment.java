@@ -33,7 +33,7 @@ public class ProductFragment extends Fragment {
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
 			Bundle savedInstanceState) {
 		// TODO Auto-generated method stub
-		View view = inflater.inflate(R.layout.product_list, null);
+		View view = inflater.inflate(R.layout.category_list, null);
 		return view;
 	}
 

@@ -38,17 +38,26 @@ public class RightAdapter extends BaseAdapter implements StickyListHeadersAdapte
 	private LayoutInflater mInflater;
 
 	private List<Product> mProducts = null;
-	private List<Order> mOrders = new ArrayList<Order>(100);
+	private List<Order> mOrders = null;
 	
 	private ProductListener mProductListener = null;
 	public void setProductListener(ProductListener listener){
 		this.mProductListener = listener;
 	}
-	
+	private OrderListener mOrderListener = null;
+	public void setOrderListener(OrderListener listener){
+		mOrderListener = listener;
+	}
 	public RightAdapter(Context context,List<Product> products) {
 		mContext = context;
 		mInflater = LayoutInflater.from(context);
 		mProducts = products;
+		mCountries = context.getResources().getStringArray(R.array.countries);
+		mSectionIndices = getSectionIndices();
+		mSectionLetters = getSectionLetters();
+	}
+	public void setOrders(List<Order> lists){
+		mOrders = lists;
 		mOrders.clear();
 		for(Product product:mProducts){
 			Order order = new Order();
@@ -57,11 +66,8 @@ public class RightAdapter extends BaseAdapter implements StickyListHeadersAdapte
 			order.mPrice = product.mPrice;
 			mOrders.add(order);
 		}
-		mCountries = context.getResources().getStringArray(R.array.countries);
-		mSectionIndices = getSectionIndices();
-		mSectionLetters = getSectionLetters();
 	}
-
+	
 	private int[] getSectionIndices() {
 		ArrayList<Integer> sectionIndices = new ArrayList<Integer>();
 		char lastFirstChar = mCountries[0].charAt(0);
@@ -104,20 +110,34 @@ public class RightAdapter extends BaseAdapter implements StickyListHeadersAdapte
 
 	@Override
 	public View getView(int position, View convertView, ViewGroup parent) {
-		convertView = LayoutInflater.from(mContext).inflate(R.layout.product, null);
-		ImageView imageView = (ImageView) convertView.findViewById(R.id.productbg);
-		Button addviewbutton = (Button) convertView.findViewById(R.id.addbg);
-		addviewbutton.setTag(position);
-		addviewbutton.setOnClickListener(mAddOnClickListener);
-		addviewbutton.setBackground(mContext.getResources().getDrawable(R.drawable.add));
-		Button subviewbutton = (Button) convertView.findViewById(R.id.subbg);
-		subviewbutton.setBackground(mContext.getResources().getDrawable(R.drawable.sub));
-		subviewbutton.setOnClickListener(mSubOnClickListener);
-		subviewbutton.setTag(position);
-		imageView.setImageDrawable(mContext.getResources().getDrawable(R.drawable.timg));
-		subviewbutton.setVisibility(View.INVISIBLE);
-		TextView textView = (TextView) convertView.findViewById(R.id.product_count);
-		textView.setVisibility(View.INVISIBLE);
+		ViewHolder holder;
+		if (convertView == null) {
+			holder = new ViewHolder();
+			convertView = LayoutInflater.from(mContext).inflate(R.layout.product, null);
+			holder.mImageView = (ImageView) convertView.findViewById(R.id.productbg);
+			holder.mAddButton = (Button) convertView.findViewById(R.id.addbg);
+			holder.mSubButton = (Button) convertView.findViewById(R.id.subbg);
+			holder.mTextview = (TextView) convertView.findViewById(R.id.product_count);
+			holder.mProductNameTextView = (TextView) convertView.findViewById(R.id.productname);
+			holder.mProductPriceTextView = (TextView) convertView.findViewById(R.id.productprice);
+			convertView.setTag(holder);
+		}
+		else{
+			holder = (ViewHolder) convertView.getTag();
+		}
+		holder.mAddButton.setTag(position);
+		holder.mAddButton.setOnClickListener(mAddOnClickListener);
+		holder.mAddButton.setBackground(mContext.getResources().getDrawable(R.drawable.add));
+		holder.mSubButton.setBackground(mContext.getResources().getDrawable(R.drawable.sub));
+		holder.mSubButton.setOnClickListener(mSubOnClickListener);
+		holder.mSubButton.setTag(position);
+		holder.mImageView.setImageDrawable(mContext.getResources().getDrawable(R.drawable.timg));
+		String mProductNameString = String.format("名称: %s", mProducts.get(position).mProductName);
+        holder.mProductNameTextView.setText(mProductNameString);
+        String mProductPriceString = String.format("价格: %s 元/份", mProducts.get(position).mPrice);
+        holder.mProductPriceTextView.setText(mProductPriceString);
+		holder.mSubButton.setVisibility(View.INVISIBLE);
+		holder.mTextview.setVisibility(View.INVISIBLE);
 		return convertView;
 
 	}
@@ -150,8 +170,9 @@ public class RightAdapter extends BaseAdapter implements StickyListHeadersAdapte
 					}
 					mProductListener.PriceChanged(totalprice);
 				}
-				
-				
+				if(mOrderListener !=null){
+					mOrderListener.OrderChanged();
+				}
 			}
 			
 			Toast tst = Toast.makeText(mContext, v.getTag().toString(), Toast.LENGTH_SHORT);
@@ -186,7 +207,9 @@ public class RightAdapter extends BaseAdapter implements StickyListHeadersAdapte
 					}
 					mProductListener.PriceChanged(totalprice);
 				}
-				
+				if(mOrderListener !=null){
+					mOrderListener.OrderChanged();
+				}
 				Toast tst = Toast.makeText(mContext, v.getTag().toString(), Toast.LENGTH_SHORT);
 		        tst.show();
 			}
@@ -266,6 +289,17 @@ public class RightAdapter extends BaseAdapter implements StickyListHeadersAdapte
 	}
 
 	class ViewHolder {
-		TextView text;
+		//产品图片
+		ImageView mImageView;
+		//加号按钮
+		Button mAddButton;
+		//产品个数
+		TextView mTextview;
+		//减号图片
+		Button mSubButton;
+		//产品名称
+		TextView mProductNameTextView;
+		//产品价格
+		TextView mProductPriceTextView;
 	}
 }

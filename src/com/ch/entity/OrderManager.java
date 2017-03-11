@@ -4,7 +4,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class OrderManager {
-	public List<Order> mOrders = new ArrayList<Order>();
+	
+	private List<Order> mOrders = new ArrayList<Order>();
 	
 	private List<Product> mProducts  =null;
 	
@@ -12,6 +13,13 @@ public class OrderManager {
 		mProducts = list;
 	}
 	
+	public List<Order> getOrders(){
+		return mOrders;
+	}
+	
+	public void setOrders(List<Order> lists){
+		mOrders = lists;
+	}
 	public int getOrderCount(){
 		return mOrders.size();
 	}

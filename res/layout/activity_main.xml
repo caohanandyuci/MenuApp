@@ -36,16 +36,6 @@
             android:orientation="vertical"
             android:scrollbars="none" />
 
-        <!--
-                ListView
-                android:id="@+id/right"
-                android:scrollbars="none"
-                android:layout_width="0dp"
-                android:layout_height="match_parent"
-                android:layout_weight="3"
-                android:background="#00FFFF"
-                android:orientation="vertical" /-->
-
         <se.emilsjolander.stickylistheaders.StickyListHeadersListView
             android:id="@+id/rightlist"
             android:layout_width="0dp"
@@ -55,7 +45,7 @@
             android:drawSelectorOnTop="true"
             android:fastScrollEnabled="true"
             android:overScrollMode="never"
-            android:padding="16dp"
+            android:padding="0dp"
             android:scrollbarStyle="outsideOverlay" />
     </LinearLayout>
     <LinearLayout 
@@ -65,17 +55,23 @@
         android:layout_alignParentBottom="true"
         android:orientation="horizontal">
         <ImageView
-            android:layout_width="80px"
-            android:layout_height="70px"/>
+            android:layout_marginLeft="10dp"
+            android:layout_width="30dp"
+            android:layout_height="30dp"
+            android:layout_marginTop="10dp"
+            android:background="@drawable/shopcar"/>
         <TextView
             android:id="@+id/totalprice"
-            android:layout_width="150dp"
-            android:layout_height="70px"
+            android:layout_width="140dp"
+            android:layout_height="60dp"
+            android:layout_marginLeft="10dp"
+            android:textColor="#000000"
             android:text="金额:Y 0.0"/>
         <Button
+            android:id="@+id/createorder"
             android:layout_width="130dp"
-            android:layout_height="70px"
-            android:layout_marginLeft="5dp"
+            android:layout_height="43dp"
+            android:layout_marginLeft="10dp"
             android:text="立即下单"
             android:background="#00aa00"/>
         
