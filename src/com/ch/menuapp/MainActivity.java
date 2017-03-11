@@ -6,7 +6,9 @@ import java.util.List;
 import se.emilsjolander.stickylistheaders.StickyListHeadersListView;
 
 import com.ch.entity.Order;
+import com.ch.entity.OrderManager;
 import com.ch.entity.Product;
+import com.ch.entity.ProductManager;
 import com.ch.model.LeftAdapter;
 import com.ch.model.ProductListener;
 import com.ch.model.RightAdapter;
@@ -28,10 +30,19 @@ import android.widget.Toast;
 
 public class MainActivity extends Activity implements ProductListener{
 
+	private ProductManager mProductManager = new ProductManager();
+	private OrderManager mOrderManager = new OrderManager();
+	
+	
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        
+        mProductManager.setProducts(Product.getTestData());
+        //初始化左侧产品分类列表
+        InitLeftCategoryList();
+        
         mTotalPriceView = (TextView) findViewById(R.id.totalprice);
         this.leftListView = (ListView) findViewById(R.id.left);
         
@@ -83,6 +94,10 @@ public class MainActivity extends Activity implements ProductListener{
     public final static class ViewHolder {
         TextView tvTag;
         TextView tvSection;
+    }
+    
+    private void InitLeftCategoryList(){
+    	
     }
     
     private StickyListHeadersListView stickyList;          //右侧商品listview

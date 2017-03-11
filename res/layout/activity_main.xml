@@ -22,16 +22,17 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:orientation="horizontal" >
+        android:orientation="horizontal" 
+        android:background="#ffffff">
 
         <ListView
             android:id="@+id/left"
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_weight="1"
-            android:background="#00BFFF"
+            android:background="#bbbbbb"
             android:divider="@null"
-            android:dividerHeight="20dp"
+            android:dividerHeight="1dp"
             android:orientation="vertical"
             android:scrollbars="none" />
 
@@ -60,8 +61,7 @@
     <LinearLayout 
         android:background="#ffffff"
         android:layout_width="match_parent"
-        android:layout_height="100dp"
-        android:layout_marginBottom="0px"
+        android:layout_height="50dp"
         android:layout_alignParentBottom="true"
         android:orientation="horizontal">
         <ImageView

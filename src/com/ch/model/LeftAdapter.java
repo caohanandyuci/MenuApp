@@ -51,22 +51,25 @@ public class LeftAdapter extends BaseAdapter {
 		this.selectItem = selectItem;
 		}
 
-	@SuppressLint("ViewHolder") public View getView(int position, View convertView, ViewGroup parent) {
+	@SuppressLint("ViewHolder")
+	public View getView(int position, View convertView, ViewGroup parent) {
 		// TODO Auto-generated method stub
-		//ViewHolder viewHolder = null;
-		//if(convertView == null){
-		//	viewHolder = new ViewHolder();
-		//	
-		//}
-		convertView=LayoutInflater.from(mContext).inflate(R.layout.product_list,null);
+		// ViewHolder viewHolder = null;
+		// if(convertView == null){
+		// viewHolder = new ViewHolder();
+		//
+		// }
+		convertView = LayoutInflater.from(mContext).inflate(
+				R.layout.product_list, null);
 		TextView textView = (TextView) convertView.findViewById(R.id.name);
 		textView.setText(list.get(position).nameString);
-		if(position == selectItem){
+		if (position == selectItem) {
 			textView.setBackgroundColor(Color.RED);
-			}else {
+		} else {
 			textView.setBackgroundColor(Color.WHITE);
-			}
-		convertView.setBackgroundDrawable(mContext.getResources().getDrawable(R.layout.list_item_selector));
+		}
+		convertView.setBackgroundDrawable(mContext.getResources().getDrawable(
+				R.layout.list_item_selector));
 		return convertView;
 	}
 	
