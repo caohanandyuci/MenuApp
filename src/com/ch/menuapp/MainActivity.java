@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import se.emilsjolander.stickylistheaders.StickyListHeadersListView;
+import se.emilsjolander.stickylistheaders.StickyListHeadersListView.OnStickyHeaderChangedListener;
 
 import com.ch.entity.Order;
 import com.ch.entity.OrderManager;
@@ -15,6 +16,7 @@ import com.ch.model.ProductListener;
 import com.ch.model.RightAdapter;
 
 import android.app.Activity;
+import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.Menu;
@@ -29,7 +31,7 @@ import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-public class MainActivity extends Activity implements ProductListener ,OrderListener{
+public class MainActivity extends Activity implements ProductListener ,OrderListener,OnStickyHeaderChangedListener{
 
 	private ProductManager mProductManager = new ProductManager();
 	private OrderManager mOrderManager = new OrderManager();
@@ -40,6 +42,7 @@ public class MainActivity extends Activity implements ProductListener ,OrderList
 		setContentView(R.layout.activity_main);
 
 		mProductManager.setProducts(Product.getTestData());
+		mOrderManager.setProductList(Product.getTestData());
 		// 初始化左侧产品分类列表
 		InitLeftCategoryList();
 		mTotalPriceView = (TextView) findViewById(R.id.totalprice);
@@ -53,7 +56,7 @@ public class MainActivity extends Activity implements ProductListener ,OrderList
 		stickyList = (StickyListHeadersListView) findViewById(R.id.rightlist);
 		// stickyList.setOnItemClickListener(this);
 		// stickyList.setOnHeaderClickListener(this);
-		// stickyList.setOnStickyHeaderChangedListener(this);
+		stickyList.setOnStickyHeaderChangedListener(this);
 		// stickyList.setOnStickyHeaderOffsetChangedListener(this);
 		// stickyList.addHeaderView(getLayoutInflater().inflate(R.layout.list_header,
 		// null));
@@ -64,8 +67,23 @@ public class MainActivity extends Activity implements ProductListener ,OrderList
 		//stickyList.setAreHeadersSticky(true);
 		stickyList.setAdapter(rightAdapter);
 	    //stickyList.setOnTouchListener(this);
+		
+		Button backButton = (Button) findViewById(R.id.backbutton);
+		backButton.setOnClickListener(mBackButtonListener);
+		
 	}
 
+	private View.OnClickListener mBackButtonListener = new View.OnClickListener() {
+		@Override
+		public void onClick(View v) {
+			// TODO Auto-generated method stub
+			Intent mIntent = new Intent();
+			mIntent.setClass(MainActivity.this, WelcomeActivity.class);
+			mIntent.addFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT); 
+			MainActivity.this.startActivity(mIntent);
+		}
+	};
+	
 	private void InitLeftCategoryList() {
 		this.leftListView = (ListView) findViewById(R.id.left);
 		final LeftAdapter leftAdapter = new LeftAdapter(this, mProductManager.getCategoryList());
@@ -136,12 +154,23 @@ public class MainActivity extends Activity implements ProductListener ,OrderList
 	}
 
 	@Override
-	public void OrderChanged() {
+	public void OrderChanged(int position) {
 		// TODO Auto-generated method stub
-		int count = this.leftListView.getChildCount();
-		for(int i=0;i<count;i++){
-			Log.d("MainActivity", "listchildview:"+this.leftListView.getChildAt(i));
-		}
-		((TextView)((ViewGroup)this.leftListView.getChildAt(3)).getChildAt(0)).setText("add");
+//		int categoryitem = mProductManager.getCategoryItem(position);
+//		int num = mOrderManager.getTotalCateCountByProduct(position);
+//		LeftAdapter adapter = ((LeftAdapter)this.leftListView.getAdapter());
+//		Log.d("MainActivity", "OrderChanged num:"+num+",,categoryitem:"+categoryitem);
+//		adapter.update(this.leftListView, categoryitem, num);
+		
+	}
+
+	@Override
+	public void onStickyHeaderChanged(StickyListHeadersListView l, View header,
+			int itemPosition, long headerId) {
+		// TODO Auto-generated method stub
+		Log.d("MainActivity", "itemPosition:"+itemPosition+",,headerId"+headerId);
+		LeftAdapter adapter = ((LeftAdapter)this.leftListView.getAdapter());
+		adapter.setSelectItem((int)headerId);
+		adapter.notifyDataSetInvalidated();
 	}
 }

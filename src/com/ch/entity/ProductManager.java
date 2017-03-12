@@ -37,8 +37,15 @@ public class ProductManager {
 		}
 		return count;
 	}
+	public Product getProductByID(int id){
+		return mCache.get(id);
+	}
+	
 	public float getPrice(int key){
 		return mCache.get(key).mPrice;
+	}
+	public int getCategoryItem(int key){
+		return mCache.get(key).mCategory;
 	}
 	
 	public String getCategory(int key){

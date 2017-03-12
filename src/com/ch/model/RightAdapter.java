@@ -110,6 +110,7 @@ public class RightAdapter extends BaseAdapter implements StickyListHeadersAdapte
 
 	@Override
 	public View getView(int position, View convertView, ViewGroup parent) {
+		//Log.d("RightAdapter","getView position:"+position+",,convertView:"+convertView+",,count"+mOrders.get(position).mNumber);
 		ViewHolder holder;
 		if (convertView == null) {
 			holder = new ViewHolder();
@@ -136,8 +137,16 @@ public class RightAdapter extends BaseAdapter implements StickyListHeadersAdapte
         holder.mProductNameTextView.setText(mProductNameString);
         String mProductPriceString = String.format("价格: %s 元/份", mProducts.get(position).mPrice);
         holder.mProductPriceTextView.setText(mProductPriceString);
-		holder.mSubButton.setVisibility(View.INVISIBLE);
-		holder.mTextview.setVisibility(View.INVISIBLE);
+        int num = mOrders.get(position).mNumber;
+		if (num == 0) {
+			holder.mSubButton.setVisibility(View.INVISIBLE);
+			holder.mTextview.setVisibility(View.INVISIBLE);
+		}
+		else{
+			holder.mSubButton.setVisibility(View.VISIBLE);
+			holder.mTextview.setVisibility(View.VISIBLE);
+			holder.mTextview.setText(String.valueOf(num));
+		}
 		return convertView;
 
 	}
@@ -171,12 +180,12 @@ public class RightAdapter extends BaseAdapter implements StickyListHeadersAdapte
 					mProductListener.PriceChanged(totalprice);
 				}
 				if(mOrderListener !=null){
-					mOrderListener.OrderChanged();
+					mOrderListener.OrderChanged(position);
 				}
 			}
 			
-			Toast tst = Toast.makeText(mContext, v.getTag().toString(), Toast.LENGTH_SHORT);
-	        tst.show();
+//			Toast tst = Toast.makeText(mContext, v.getTag().toString(), Toast.LENGTH_SHORT);
+//	        tst.show();
 		}
 
 	};
@@ -208,10 +217,10 @@ public class RightAdapter extends BaseAdapter implements StickyListHeadersAdapte
 					mProductListener.PriceChanged(totalprice);
 				}
 				if(mOrderListener !=null){
-					mOrderListener.OrderChanged();
+					mOrderListener.OrderChanged(position);
 				}
-				Toast tst = Toast.makeText(mContext, v.getTag().toString(), Toast.LENGTH_SHORT);
-		        tst.show();
+//				Toast tst = Toast.makeText(mContext, v.getTag().toString(), Toast.LENGTH_SHORT);
+//		        tst.show();
 			}
 		}
 

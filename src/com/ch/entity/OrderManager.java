@@ -40,6 +40,22 @@ public class OrderManager {
 		}
 	}
 	
+	
+	
+	public int getTotalCateCountByProduct(int ProductId){
+		int count = 0;
+		int categoryitem = mProducts.get(ProductId).mCategory;
+		for(Order o:mOrders){
+			if(o.mNumber>0){
+				Product product = mProducts.get((int)o.mOrderID);
+				if(ProductId==categoryitem){
+					count += o.mNumber;
+				}
+			}
+		}
+		return count;
+	}
+	
 	public void clearOrders(){
 		mOrders.clear();
 	}

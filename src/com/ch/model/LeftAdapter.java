@@ -47,14 +47,19 @@ public class LeftAdapter extends BaseAdapter {
 		return position;
 	}
 
-//	public void update(int index,ListView listview){
-//        //得到第一个可见item项的位置
-//        int visiblePosition = listview.getFirstVisiblePosition();
-//        //得到指定位置的视图，对listview的缓存机制不清楚的可以去了解下
-//        View view = listview.getChildAt(index - visiblePosition);
-//        ViewHolder holder = (ViewHolder) view.getTag();
-//        holder.tv2 = (TextView) view.findViewById(R.id.tv2);
-//    }
+	public void update(ListView listview,int index,int num){
+        //得到第一个可见item项的位置
+        int visiblePosition = listview.getFirstVisiblePosition();
+        //得到指定位置的视图，对listview的缓存机制不清楚的可以去了解下
+        View view = listview.getChildAt(index - visiblePosition);
+        TextView countview = (TextView) view.findViewById(R.id.count);
+		if (num > 0) {
+			countview.setVisibility(View.VISIBLE);
+		} else {
+			countview.setVisibility(View.INVISIBLE);
+		}
+        //countview.setText(num);
+    }
 	
 	private int selectItem = 0;
 

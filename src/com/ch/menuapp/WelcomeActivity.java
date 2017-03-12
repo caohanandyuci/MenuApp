@@ -26,6 +26,7 @@ public class WelcomeActivity extends Activity {
 			// TODO Auto-generated method stub
 			Intent mIntent = new Intent();
 			mIntent.setClass(WelcomeActivity.this, MainActivity.class);
+			mIntent.addFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT); 
 			WelcomeActivity.this.startActivity(mIntent);
 		}
 	};
