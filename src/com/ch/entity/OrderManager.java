@@ -13,9 +13,10 @@ public class OrderManager {
 		mProducts = list;
 	}
 	
-	public List<Order> getOrders(){
+	public List<Order> getOrders() {
 		return mOrders;
 	}
+	
 	
 	public void setOrders(List<Order> lists){
 		mOrders = lists;

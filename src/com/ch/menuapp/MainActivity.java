@@ -11,23 +11,29 @@ import com.ch.entity.OrderManager;
 import com.ch.entity.Product;
 import com.ch.entity.ProductManager;
 import com.ch.model.LeftAdapter;
+import com.ch.model.OrderListAdapter;
 import com.ch.model.OrderListener;
 import com.ch.model.ProductListener;
 import com.ch.model.RightAdapter;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.drawable.BitmapDrawable;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.Gravity;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.View.OnClickListener;
+import android.view.ViewGroup.LayoutParams;
 import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.ListView;
+import android.widget.PopupWindow;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -36,11 +42,24 @@ public class MainActivity extends Activity implements ProductListener ,OrderList
 	private ProductManager mProductManager = new ProductManager();
 	private OrderManager mOrderManager = new OrderManager();
 
+	private PopupWindow mOrderList = null;
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_main);
 
+		View popupView = getLayoutInflater().inflate(R.layout.order_list, null);
+		ListView mOrderListView = (ListView) popupView.findViewById(R.id.orders);
+		OrderListAdapter mOrderListAdapter = new OrderListAdapter(this,mOrderManager);
+		mOrderListView.setAdapter(mOrderListAdapter);
+		mOrderList = new PopupWindow(popupView, LayoutParams.MATCH_PARENT, LayoutParams.WRAP_CONTENT, true);
+		mOrderList.setTouchable(true);
+		mOrderList.setOutsideTouchable(true);
+		mOrderList.setBackgroundDrawable(new BitmapDrawable(getResources(), (Bitmap) null));
+		mOrderList.setAnimationStyle(R.style.anim_menu_bottombar);
+		mOrderList.getContentView().setFocusableInTouchMode(true);
+		mOrderList.getContentView().setFocusable(true);
+		
 		mProductManager.setProducts(Product.getTestData());
 		mOrderManager.setProductList(Product.getTestData());
 		// 初始化左侧产品分类列表
@@ -122,8 +141,12 @@ public class MainActivity extends Activity implements ProductListener ,OrderList
 		@Override
 		public void onClick(View v) {
 			// TODO Auto-generated method stub
-			Toast tst = Toast.makeText(MainActivity.this, "下单成功！", Toast.LENGTH_SHORT);
-	        tst.show();
+			
+			if (mOrderList != null && !mOrderList.isShowing()) {
+				mOrderList.showAtLocation(findViewById(R.id.main_layout), Gravity.BOTTOM, 0, 0);
+            }
+//			Toast tst = Toast.makeText(MainActivity.this, "下单成功！", Toast.LENGTH_SHORT);
+//	        tst.show();
 		}
 	};
 
