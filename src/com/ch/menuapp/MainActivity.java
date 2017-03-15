@@ -29,11 +29,13 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup.LayoutParams;
+import android.view.WindowManager;
 import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.PopupWindow;
+import android.widget.PopupWindow.OnDismissListener;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -49,9 +51,9 @@ public class MainActivity extends Activity implements ProductListener ,OrderList
 		setContentView(R.layout.activity_main);
 
 		View popupView = getLayoutInflater().inflate(R.layout.order_list, null);
-		ListView mOrderListView = (ListView) popupView.findViewById(R.id.orders);
-		OrderListAdapter mOrderListAdapter = new OrderListAdapter(this,mOrderManager);
-		mOrderListView.setAdapter(mOrderListAdapter);
+		//ListView mOrderListView = (ListView) popupView.findViewById(R.id.orders);
+		//OrderListAdapter mOrderListAdapter = new OrderListAdapter(this,mOrderManager);
+		//mOrderListView.setAdapter(mOrderListAdapter);
 		mOrderList = new PopupWindow(popupView, LayoutParams.MATCH_PARENT, LayoutParams.WRAP_CONTENT, true);
 		mOrderList.setTouchable(true);
 		mOrderList.setOutsideTouchable(true);
@@ -59,9 +61,16 @@ public class MainActivity extends Activity implements ProductListener ,OrderList
 		mOrderList.setAnimationStyle(R.style.anim_menu_bottombar);
 		mOrderList.getContentView().setFocusableInTouchMode(true);
 		mOrderList.getContentView().setFocusable(true);
+		mOrderList.setOnDismissListener(new OnDismissListener() {
+	        @Override
+	        public void onDismiss() {
+	            // popupWindow隐藏时恢复屏幕正常透明度
+	            setBackgroundAlpha(1.0f);
+	        }
+	    });
+		
 		
 		mProductManager.setProducts(Product.getTestData());
-		mOrderManager.setProductList(Product.getTestData());
 		// 初始化左侧产品分类列表
 		InitLeftCategoryList();
 		mTotalPriceView = (TextView) findViewById(R.id.totalprice);
@@ -69,18 +78,19 @@ public class MainActivity extends Activity implements ProductListener ,OrderList
 		mCreateOrderButton.setOnClickListener(mCreateOrderClickListener);
 		//初始化右侧产品详单
 		rightAdapter = new RightAdapter(this, mProductManager.mProducts);
-		rightAdapter.setOrders(mOrderManager.getOrders());
+		rightAdapter.setOrderCacheLists(mOrderManager.getOrderCacheLists());
 		rightAdapter.setProductListener(this);
 		rightAdapter.setOrderListener(this);
 		stickyList = (StickyListHeadersListView) findViewById(R.id.rightlist);
 		// stickyList.setOnItemClickListener(this);
 		// stickyList.setOnHeaderClickListener(this);
 		stickyList.setOnStickyHeaderChangedListener(this);
+		stickyList.setFastScrollEnabled(false);
+		stickyList.setVerticalScrollBarEnabled(false);
 		// stickyList.setOnStickyHeaderOffsetChangedListener(this);
 		// stickyList.addHeaderView(getLayoutInflater().inflate(R.layout.list_header,
 		// null));
-		//stickyList.addFooterView(getLayoutInflater().inflate(
-		//		R.layout.list_footer, null));
+		stickyList.addFooterView(getLayoutInflater().inflate(R.layout.list_footer, null));
 		stickyList.setEmptyView(findViewById(R.id.empty));
 		stickyList.setDrawingListUnderStickyHeader(true);
 		//stickyList.setAreHeadersSticky(true);
@@ -89,6 +99,9 @@ public class MainActivity extends Activity implements ProductListener ,OrderList
 		
 		Button backButton = (Button) findViewById(R.id.backbutton);
 		backButton.setOnClickListener(mBackButtonListener);
+		
+		Button shopcarButton = (Button) findViewById(R.id.shopcar);
+		shopcarButton.setOnClickListener(mShopCarClickListener);
 		
 	}
 
@@ -112,7 +125,7 @@ public class MainActivity extends Activity implements ProductListener ,OrderList
 			public void onItemClick(AdapterView<?> arg0, View arg1,int arg2, long arg3) {
 				// TODO Auto-generated method stub
 				leftAdapter.setSelectItem(arg2);
-				leftAdapter.notifyDataSetInvalidated();
+				//leftAdapter.notifyDataSetInvalidated();
 				Log.d("MainActivity", "arg2:"+arg2+",,,arg3:"+arg3);
 				int srolltoposition = 0;
 				for (int i = 0; i < arg2; i++) {
@@ -120,7 +133,7 @@ public class MainActivity extends Activity implements ProductListener ,OrderList
 				}
 				Log.d("MainActivity", "srolltoposition:"+srolltoposition+"stickyList:"+rightAdapter.getCount());
 						if (srolltoposition < rightAdapter.getCount()) {
-							stickyList.smoothScrollToPosition(srolltoposition);
+							stickyList.setSelection(srolltoposition);
 						}
 			}
 		});
@@ -144,12 +157,26 @@ public class MainActivity extends Activity implements ProductListener ,OrderList
 			
 			if (mOrderList != null && !mOrderList.isShowing()) {
 				mOrderList.showAtLocation(findViewById(R.id.main_layout), Gravity.BOTTOM, 0, 0);
+				setBackgroundAlpha(0.5f);
+			   
             }
 //			Toast tst = Toast.makeText(MainActivity.this, "下单成功！", Toast.LENGTH_SHORT);
 //	        tst.show();
 		}
 	};
 
+	private View.OnClickListener mShopCarClickListener = new View.OnClickListener() {
+		
+		@Override
+		public void onClick(View v) {
+			// TODO Auto-generated method stub
+			Intent mIntent = new Intent();
+			mIntent.setClass(MainActivity.this, ShopCarActivity.class);
+			mIntent.addFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT); 
+			MainActivity.this.startActivity(mIntent);
+		}
+	};
+	
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
 		// Inflate the menu; this adds items to the action bar if it is present.
@@ -179,11 +206,11 @@ public class MainActivity extends Activity implements ProductListener ,OrderList
 	@Override
 	public void OrderChanged(int position) {
 		// TODO Auto-generated method stub
-//		int categoryitem = mProductManager.getCategoryItem(position);
-//		int num = mOrderManager.getTotalCateCountByProduct(position);
-//		LeftAdapter adapter = ((LeftAdapter)this.leftListView.getAdapter());
-//		Log.d("MainActivity", "OrderChanged num:"+num+",,categoryitem:"+categoryitem);
-//		adapter.update(this.leftListView, categoryitem, num);
+		int categoryitem = mOrderManager.getOrderByProductId(position).mProduct.mCategory;
+		int num = mOrderManager.getTotalCateCountByProduct(position);
+		LeftAdapter adapter = ((LeftAdapter)this.leftListView.getAdapter());
+		Log.d("MainActivity", "OrderChanged num:"+num+",,categoryitem:"+categoryitem);
+		adapter.update(this.leftListView, categoryitem, num);
 		
 	}
 
@@ -194,6 +221,22 @@ public class MainActivity extends Activity implements ProductListener ,OrderList
 		Log.d("MainActivity", "itemPosition:"+itemPosition+",,headerId"+headerId);
 		LeftAdapter adapter = ((LeftAdapter)this.leftListView.getAdapter());
 		adapter.setSelectItem((int)headerId);
-		adapter.notifyDataSetInvalidated();
+		adapter.UpdateSelectItem(this.leftListView,(int)headerId);
+		//adapter.notifyDataSetInvalidated();
 	}
+	
+	
+	/**
+	 * 设置添加屏幕的背景透明度
+	 * 
+	 * @param bgAlpha
+	 *            屏幕透明度0.0-1.0 1表示完全不透明
+	 */
+	public void setBackgroundAlpha(float bgAlpha) {
+		WindowManager.LayoutParams lp = ((Activity) this).getWindow()
+				.getAttributes();
+		lp.alpha = bgAlpha;
+		((Activity) this).getWindow().setAttributes(lp);
+	}
+	
 }

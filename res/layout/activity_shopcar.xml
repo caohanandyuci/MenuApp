@@ -1,24 +1,9 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/main_layout"
+    android:id="@+id/shopcar_layout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="com.ch.menuapp.MainActivity" >
-
-    <!--
-         TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="@string/hello_world" /
-    -->
-    <!--
-          fragment
-        android:name="com.ch.widget.ProductFragment"
-        android:id="@+id/productfragment"
-        android:layout_width="300dp"
-        android:layout_height="500dp"
-        android:background="#ffff00"/
-    -->
+    tools:context="com.ch.menuapp.ShopCarActivity" >
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="30dp"
@@ -39,25 +24,10 @@
         android:layout_marginTop="30dp"
         android:orientation="horizontal" 
         android:background="#ffffff">
-        
-
-        <ListView
-            android:id="@+id/left"
-            android:layout_width="0dp"
-            android:layout_height="match_parent"
-            android:layout_weight="1"
-            android:background="#bbbbbb"
-            android:divider="@null"
-            android:dividerHeight="1dp"
-            android:orientation="vertical"
-            android:paddingTop="20dp"
-            android:scrollbars="none" />
-
         <se.emilsjolander.stickylistheaders.StickyListHeadersListView
             android:id="@+id/rightlist"
-            android:layout_width="0dp"
+            android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_weight="3"
             android:clipToPadding="false"
             android:drawSelectorOnTop="true"
             android:fastScrollEnabled="true"
@@ -71,13 +41,12 @@
         android:layout_height="50dp"
         android:layout_alignParentBottom="true"
         android:orientation="horizontal">
-        <Button
-            android:id="@+id/shopcar"
+        <TextView
             android:layout_marginLeft="10dp"
-            android:layout_width="30dp"
-            android:layout_height="30dp"
+            android:layout_width="wrap_content"
+            android:layout_height="45dp"
             android:layout_marginTop="10dp"
-            android:background="@drawable/shopcar"/>
+            android:text="数量:10"/>
         <TextView
             android:id="@+id/totalprice"
             android:layout_width="140dp"

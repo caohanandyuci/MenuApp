@@ -69,6 +69,23 @@ public class LeftAdapter extends BaseAdapter {
 
 	public void setSelectItem(int selectItem) {
 		this.selectItem = selectItem;
+		
+	}
+	
+	public void UpdateSelectItem(ListView listview,int selectItem){
+		this.selectItem = selectItem;
+		//得到第一个可见item项的位置
+        int visiblePosition = listview.getFirstVisiblePosition();
+		for (int index = 0; index < listview.getChildCount(); index++) {
+			View view = listview.getChildAt(index - visiblePosition);
+			if(selectItem == (index-visiblePosition)){
+				view.setBackgroundColor(Color.RED);
+			}
+			else{
+				view.setBackgroundColor(Color.WHITE);
+			}
+		}
+		
 	}
 
 	@SuppressLint("ViewHolder")

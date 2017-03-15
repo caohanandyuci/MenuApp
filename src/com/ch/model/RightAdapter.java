@@ -38,7 +38,7 @@ public class RightAdapter extends BaseAdapter implements StickyListHeadersAdapte
 	private LayoutInflater mInflater;
 
 	private List<Product> mProducts = null;
-	private List<Order> mOrders = null;
+	private List<Order> mOrderCacheLists = null;
 	
 	private ProductListener mProductListener = null;
 	public void setProductListener(ProductListener listener){
@@ -56,15 +56,16 @@ public class RightAdapter extends BaseAdapter implements StickyListHeadersAdapte
 		mSectionIndices = getSectionIndices();
 		mSectionLetters = getSectionLetters();
 	}
-	public void setOrders(List<Order> lists){
-		mOrders = lists;
-		mOrders.clear();
+	public void setOrderCacheLists(List<Order> lists){
+		mOrderCacheLists = lists;
+		mOrderCacheLists.clear();
 		for(Product product:mProducts){
 			Order order = new Order();
 			order.mNumber = 0;
 			order.mOrderID = product.mID;
 			order.mPrice = product.mPrice;
-			mOrders.add(order);
+			order.mProduct = product;
+			mOrderCacheLists.add(order);
 		}
 	}
 	
@@ -137,7 +138,7 @@ public class RightAdapter extends BaseAdapter implements StickyListHeadersAdapte
         holder.mProductNameTextView.setText(mProductNameString);
         String mProductPriceString = String.format("价格: %s 元/份", mProducts.get(position).mPrice);
         holder.mProductPriceTextView.setText(mProductPriceString);
-        int num = mOrders.get(position).mNumber;
+        int num = mOrderCacheLists.get(position).mNumber;
 		if (num == 0) {
 			holder.mSubButton.setVisibility(View.INVISIBLE);
 			holder.mTextview.setVisibility(View.INVISIBLE);
@@ -158,7 +159,7 @@ public class RightAdapter extends BaseAdapter implements StickyListHeadersAdapte
 			// TODO Auto-generated method stub
 			if(v!=null){
 				int position = (Integer) v.getTag();
-				Order order = mOrders.get(position);
+				Order order = mOrderCacheLists.get(position);
 				order.mNumber--;
 				if(order.mNumber<0){
 					order.mNumber =0;
@@ -174,7 +175,7 @@ public class RightAdapter extends BaseAdapter implements StickyListHeadersAdapte
 				
 				if(mProductListener!=null){
 					float totalprice = 0.0f;
-					for(Order o:mOrders){
+					for(Order o:mOrderCacheLists){
 						totalprice += o.mPrice*o.mNumber;
 					}
 					mProductListener.PriceChanged(totalprice);
@@ -199,7 +200,7 @@ public class RightAdapter extends BaseAdapter implements StickyListHeadersAdapte
 			if(v!=null){
 				int position = (Integer) v.getTag();
 				Log.d("RightAdapter", "position:"+position+",,,v:"+v);
-				Order order = mOrders.get(position);
+				Order order = mOrderCacheLists.get(position);
 				order.mNumber++;
 				LinearLayout parent = (LinearLayout) v.getParent();
 				Log.d("RightAdapter", "order.mNumber:"+order.mNumber);
@@ -211,13 +212,13 @@ public class RightAdapter extends BaseAdapter implements StickyListHeadersAdapte
 				
 				if(mProductListener!=null){
 					float totalprice = 0.0f;
-					for(Order o:mOrders){
+					for(Order o:mOrderCacheLists){
 						totalprice += o.mPrice*o.mNumber;
 					}
 					mProductListener.PriceChanged(totalprice);
 				}
 				if(mOrderListener !=null){
-					mOrderListener.OrderChanged(position);
+					mOrderListener.OrderChanged((int)order.mProduct.mID);
 				}
 //				Toast tst = Toast.makeText(mContext, v.getTag().toString(), Toast.LENGTH_SHORT);
 //		        tst.show();

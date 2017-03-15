@@ -3,25 +3,28 @@ package com.ch.entity;
 import java.util.ArrayList;
 import java.util.List;
 
+import android.util.Log;
+
 public class OrderManager {
 	
+	private List<Order> mOrdersCacheLists = new ArrayList<Order>();
+	
 	private List<Order> mOrders = new ArrayList<Order>();
-	
-	private List<Product> mProducts  =null;
-	
-	public void setProductList(List<Product> list){
-		mProducts = list;
+	public List<Order> getOrderCacheLists() {
+		return mOrdersCacheLists;
 	}
 	
-	public List<Order> getOrders() {
+	public List<Order> getOrders(){
+		mOrders.clear();
+		Log.d("OrderManager", "mOrdersCacheLists"+mOrdersCacheLists.size()+",,"+mOrdersCacheLists.get(0).mNumber);
+		for(Order o:mOrdersCacheLists){
+			if(o.mNumber>0){
+				mOrders.add(o);
+			}
+		}
 		return mOrders;
 	}
-	
-	
-	public void setOrders(List<Order> lists){
-		mOrders = lists;
-	}
-	public int getOrderCount(){
+ 	public int getOrderCount(){
 		return mOrders.size();
 	}
 	public float getTotalPrice(){
@@ -41,17 +44,26 @@ public class OrderManager {
 		}
 	}
 	
+	public Order getOrderByProductId(int productid){
+		Log.d("OrderManager","productid:"+productid+"size:"+mOrders.size());
+		getOrders();
+		Log.d("OrderManager","productid:"+productid+"size:111"+mOrders.size()+",,,"+mOrders.get(0).mOrderID);
+		for(Order o:mOrders){
+			if(o.mOrderID==productid){
+				return o;
+			}
+		}
+		return null;
+	}
 	
 	
 	public int getTotalCateCountByProduct(int ProductId){
 		int count = 0;
-		int categoryitem = mProducts.get(ProductId).mCategory;
-		for(Order o:mOrders){
-			if(o.mNumber>0){
-				Product product = mProducts.get((int)o.mOrderID);
-				if(ProductId==categoryitem){
-					count += o.mNumber;
-				}
+		Product product = getOrderByProductId(ProductId).mProduct;
+		int categoryitem = product.mCategory;
+		for (Order o : mOrders) {
+			if (o.mProduct.mCategory == categoryitem) {
+				count += o.mNumber;
 			}
 		}
 		return count;
