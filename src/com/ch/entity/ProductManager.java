@@ -6,6 +6,7 @@ import java.util.HashSet;
 import java.util.List;
 
 import android.R.integer;
+import android.util.SparseArray;
 
 public class ProductManager {
 	public List<Product> mProducts = new ArrayList<Product>();
@@ -14,7 +15,7 @@ public class ProductManager {
 	public void setProducts(List<Product> list){
 		mProducts = list;
 		for (Product p : mProducts) {
-			mCache.put(String.valueOf(p.mID), p);
+			mCache.append((int) p.mID, p);
 		}
 	}
 	private String[] mCategoryList = {"干锅","凉菜","热菜","汤","粥","蒸菜","特价菜","套餐"};
@@ -26,7 +27,7 @@ public class ProductManager {
 		return lists;
 	}
 	
-	private HashMap<String,Product> mCache  = new HashMap<String,Product>();
+	private SparseArray<Product> mCache  = new SparseArray<Product>();
 	//获取每个分类下的商品数量
 	public int getProductCountOfCategory(int categorykey){
 		int count = 0;

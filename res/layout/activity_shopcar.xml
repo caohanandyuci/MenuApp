@@ -6,26 +6,39 @@
     tools:context="com.ch.menuapp.ShopCarActivity" >
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="30dp"
+        android:layout_height="50dp"
         android:background="#0093fe"
         android:orientation="horizontal" >
         <Button
             android:id="@+id/backbutton"
-            android:layout_width="60dp"
-            android:layout_height="30dp"
-            android:layout_marginLeft="10dp"
-            android:text="《 返回"
-            android:background="#aa0000"/>
+            android:layout_width="0dp"
+            android:layout_height="50dp"
+            android:layout_weight="1"
+            android:layout_marginLeft="3dp"
+            android:background="#0093fe"
+            android:text=" 返回"/>
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="2"
+            android:text="订单"
+            android:textSize="18dp"
+            android:gravity="center"
+            android:textColor="#ffffff"/>
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"/>
         
     </LinearLayout>
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_marginTop="30dp"
+        android:layout_marginTop="50dp"
         android:orientation="horizontal" 
         android:background="#ffffff">
         <se.emilsjolander.stickylistheaders.StickyListHeadersListView
-            android:id="@+id/rightlist"
+            android:id="@+id/orderlist"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:clipToPadding="false"
@@ -42,6 +55,7 @@
         android:layout_alignParentBottom="true"
         android:orientation="horizontal">
         <TextView
+            android:id="@+id/shopcarcount"
             android:layout_marginLeft="10dp"
             android:layout_width="wrap_content"
             android:layout_height="45dp"

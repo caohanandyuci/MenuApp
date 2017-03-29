@@ -3,12 +3,17 @@ package com.ch.model;
 import java.util.ArrayList;
 import java.util.List;
 
+import se.emilsjolander.stickylistheaders.StickyListHeadersAdapter;
+
 import com.ch.entity.Order;
 import com.ch.entity.OrderManager;
+import com.ch.entity.Product;
 import com.ch.menuapp.R;
+import com.ch.model.RightAdapter.HeaderViewHolder;
 import com.ch.model.RightAdapter.ViewHolder;
 
 import android.content.Context;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -16,36 +21,39 @@ import android.view.View.OnClickListener;
 import android.widget.BaseAdapter;
 import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.SectionIndexer;
 import android.widget.TextView;
 
 
 
-public class OrderListAdapter extends BaseAdapter {
+public class OrderListAdapter extends BaseAdapter implements StickyListHeadersAdapter, SectionIndexer { 
 
+	private final static String TAG = "OrderListAdapter";
+	
 	public OrderListAdapter(Context ctx,OrderManager manager){
 		mContext = ctx;
 		mOrderManager = manager;
+		mInflater = LayoutInflater.from(mContext);
 		UpdateAdapter();
 	}
 	private OrderManager mOrderManager = null;
 	private Context mContext = null;
-	private List<Order> mOrders = new ArrayList<Order>();
+	private LayoutInflater mInflater;
+	private List<Order> getOrderLists(){
+		return mOrderManager.getInstance().getOrderCacheLists();
+	}
+	
 	@Override
 	public int getCount() {
 		// TODO Auto-generated method stub
 		int count = 0;
-		List<Order> lists = mOrderManager.getOrders();
-		for(int i=0;i<lists.size();i++){
-			if(lists.get(i).mNumber>0){
-				count ++;
-			}
-		}
+		count = mOrderManager.getOrderCacheLists().size();
 		return count;
 	}
 
 	public void UpdateAdapter(){
-		mOrders.clear();
-		mOrders = mOrderManager.getOrders();
+//		mOrders.clear();
+//		mOrders = mOrderManager.getOrders();
 	}
 	
 	@Override
@@ -63,6 +71,7 @@ public class OrderListAdapter extends BaseAdapter {
 	@Override
 	public View getView(int position, View convertView, ViewGroup parent) {
 		// TODO Auto-generated method stub
+		Log.d("OrderListAdapter", "position:"+position+"size:"+mOrderManager.getOrderCount());
 		ViewHolder holder;
 		if (convertView == null) {
 			holder = new ViewHolder();
@@ -85,13 +94,17 @@ public class OrderListAdapter extends BaseAdapter {
 		holder.mSubButton.setOnClickListener(mSubOnClickListener);
 		holder.mSubButton.setTag(position);
 		holder.mImageView.setImageDrawable(mContext.getResources().getDrawable(R.drawable.timg));
-		String mProductNameString = String.format("名称: %s", mOrders.get(position).mProduct.mPrice);
+		String mNumberNameString = String.format("%s",getOrderLists().get(position).mNumber);
+		holder.mTextview.setText(mNumberNameString);
+		String mProductNameString = String.format("名称: %s", getOrderLists().get(position).mProduct.mPrice);
         holder.mProductNameTextView.setText(mProductNameString);
-        String mProductPriceString = String.format("价格: %s 元/份", mOrders.get(position).mPrice);
+        String mProductPriceString = String.format("价格: %s 元/份", getOrderLists().get(position).mPrice);
         holder.mProductPriceTextView.setText(mProductPriceString);
         return convertView;
 	}
-	
+	class HeaderViewHolder {
+		TextView text;
+	}
 	
 	class ViewHolder {
 		//产品图片
@@ -125,4 +138,47 @@ public class OrderListAdapter extends BaseAdapter {
 		}
 	};
 
-}
+
+	@Override
+	public Object[] getSections() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public int getPositionForSection(int sectionIndex) {
+		// TODO Auto-generated method stub
+		return 0;
+	}
+
+	@Override
+	public int getSectionForPosition(int position) {
+		// TODO Auto-generated method stub
+		return 0;
+	}
+
+	@Override
+	public View getHeaderView(int position, View convertView, ViewGroup parent) {
+		// TODO Auto-generated method stub
+		HeaderViewHolder holder = null;
+
+		if (convertView == null) {
+			holder = new HeaderViewHolder();
+			convertView = mInflater.inflate(R.layout.header, parent, false);
+			holder.text = (TextView) convertView.findViewById(R.id.text1);
+			convertView.setTag(holder);
+		} else {
+			holder = (HeaderViewHolder) convertView.getTag();
+		}
+
+		String category = Product.list[getOrderLists().get(position).mProduct.mCategory];
+		holder.text.setText(category);
+		return convertView;
+	}
+
+	@Override
+	public long getHeaderId(int position) {
+		// TODO Auto-generated method stub
+		//return OrderManager.getInstance().getOrderByProductId(position).mProduct.mCategory;
+		return 0;
+	}}

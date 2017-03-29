@@ -3,40 +3,56 @@ package com.ch.entity;
 import java.util.ArrayList;
 import java.util.List;
 
+import android.database.Observable;
 import android.util.Log;
 
-public class OrderManager {
+public class OrderManager extends Observable {
 	
+	private OrderManager(){}
+	
+	
+	private static OrderManager mInstanceManager = null;
+	
+	public static synchronized OrderManager getInstance(){
+		if (mInstanceManager==null) {
+			mInstanceManager= new OrderManager();
+		}
+		return mInstanceManager;
+	}
 	private List<Order> mOrdersCacheLists = new ArrayList<Order>();
 	
-	private List<Order> mOrders = new ArrayList<Order>();
+	
+	public void Init(){
+		
+	}
+	
 	public List<Order> getOrderCacheLists() {
 		return mOrdersCacheLists;
 	}
 	
-	public List<Order> getOrders(){
-		mOrders.clear();
-		Log.d("OrderManager", "mOrdersCacheLists"+mOrdersCacheLists.size()+",,"+mOrdersCacheLists.get(0).mNumber);
-		for(Order o:mOrdersCacheLists){
-			if(o.mNumber>0){
-				mOrders.add(o);
-			}
-		}
-		return mOrders;
-	}
+	
  	public int getOrderCount(){
-		return mOrders.size();
+		return mOrdersCacheLists.size();
 	}
+ 	
+ 	public int getTotalCount(){
+ 		int count = 0;
+ 		for(Order o:mOrdersCacheLists){
+ 			count += o.mNumber;
+ 		}
+ 		return count;
+ 	}
+ 	
 	public float getTotalPrice(){
 		float totalprice = 0.0f;
-		for(Order o:mOrders){
+		for(Order o:mOrdersCacheLists){
 			totalprice += (o.mPrice*o.mNumber);
 		}
 		return totalprice;
 	}
 	
 	public void modifyOrder(int id,int num){
-		for(Order o:mOrders){
+		for(Order o:mOrdersCacheLists){
 			if(id==o.mOrderID){
 				o.mNumber = num;
 				return;
@@ -44,11 +60,20 @@ public class OrderManager {
 		}
 	}
 	
+	public boolean isExistByProductId(int productid){
+		for(Order o:mOrdersCacheLists){
+			if(o.mOrderID==productid){
+				return true;
+			}
+		}
+		return false;
+	}
+	
+	
 	public Order getOrderByProductId(int productid){
-		Log.d("OrderManager","productid:"+productid+"size:"+mOrders.size());
-		getOrders();
-		Log.d("OrderManager","productid:"+productid+"size:111"+mOrders.size()+",,,"+mOrders.get(0).mOrderID);
-		for(Order o:mOrders){
+		Log.d("OrderManager","productid:"+productid+"size:"+mOrdersCacheLists.size());
+		//getOrders();
+		for(Order o:mOrdersCacheLists){
 			if(o.mOrderID==productid){
 				return o;
 			}
@@ -61,7 +86,7 @@ public class OrderManager {
 		int count = 0;
 		Product product = getOrderByProductId(ProductId).mProduct;
 		int categoryitem = product.mCategory;
-		for (Order o : mOrders) {
+		for (Order o : mOrdersCacheLists) {
 			if (o.mProduct.mCategory == categoryitem) {
 				count += o.mNumber;
 			}
@@ -70,6 +95,6 @@ public class OrderManager {
 	}
 	
 	public void clearOrders(){
-		mOrders.clear();
+		mOrdersCacheLists.clear();
 	}
 }

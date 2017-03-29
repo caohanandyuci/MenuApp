@@ -6,6 +6,7 @@ import java.util.List;
 import se.emilsjolander.stickylistheaders.StickyListHeadersAdapter;
 
 import com.ch.entity.Order;
+import com.ch.entity.OrderManager;
 import com.ch.entity.Product;
 import com.ch.menuapp.MainActivity;
 import com.ch.menuapp.R;
@@ -32,7 +33,7 @@ import android.widget.Toast;
 public class RightAdapter extends BaseAdapter implements StickyListHeadersAdapter, SectionIndexer {
 
 	private final Context mContext;
-	private String[] mCountries;
+	//private String[] mCountries;
 	private int[] mSectionIndices;
 	private Character[] mSectionLetters;
 	private LayoutInflater mInflater;
@@ -52,47 +53,47 @@ public class RightAdapter extends BaseAdapter implements StickyListHeadersAdapte
 		mContext = context;
 		mInflater = LayoutInflater.from(context);
 		mProducts = products;
-		mCountries = context.getResources().getStringArray(R.array.countries);
-		mSectionIndices = getSectionIndices();
-		mSectionLetters = getSectionLetters();
+		//mCountries = context.getResources().getStringArray(R.array.countries);
+//		mSectionIndices = getSectionIndices();
+//		mSectionLetters = getSectionLetters();
 	}
 	public void setOrderCacheLists(List<Order> lists){
 		mOrderCacheLists = lists;
 		mOrderCacheLists.clear();
-		for(Product product:mProducts){
-			Order order = new Order();
-			order.mNumber = 0;
-			order.mOrderID = product.mID;
-			order.mPrice = product.mPrice;
-			order.mProduct = product;
-			mOrderCacheLists.add(order);
-		}
+//		for(Product product:mProducts){
+//			Order order = new Order();
+//			order.mNumber = 0;
+//			order.mOrderID = product.mID;
+//			order.mPrice = product.mPrice;
+//			order.mProduct = product;
+//			mOrderCacheLists.add(order);
+//		}
 	}
 	
-	private int[] getSectionIndices() {
-		ArrayList<Integer> sectionIndices = new ArrayList<Integer>();
-		char lastFirstChar = mCountries[0].charAt(0);
-		sectionIndices.add(0);
-		for (int i = 1; i < mCountries.length; i++) {
-			if (mCountries[i].charAt(0) != lastFirstChar) {
-				lastFirstChar = mCountries[i].charAt(0);
-				sectionIndices.add(i);
-			}
-		}
-		int[] sections = new int[sectionIndices.size()];
-		for (int i = 0; i < sectionIndices.size(); i++) {
-			sections[i] = sectionIndices.get(i);
-		}
-		return sections;
-	}
+//	private int[] getSectionIndices() {
+//		ArrayList<Integer> sectionIndices = new ArrayList<Integer>();
+//		char lastFirstChar = mCountries[0].charAt(0);
+//		sectionIndices.add(0);
+//		for (int i = 1; i < mCountries.length; i++) {
+//			if (mCountries[i].charAt(0) != lastFirstChar) {
+//				lastFirstChar = mCountries[i].charAt(0);
+//				sectionIndices.add(i);
+//			}
+//		}
+//		int[] sections = new int[sectionIndices.size()];
+//		for (int i = 0; i < sectionIndices.size(); i++) {
+//			sections[i] = sectionIndices.get(i);
+//		}
+//		return sections;
+//	}
 
-	private Character[] getSectionLetters() {
-		Character[] letters = new Character[mSectionIndices.length];
-		for (int i = 0; i < mSectionIndices.length; i++) {
-			letters[i] = mCountries[mSectionIndices[i]].charAt(0);
-		}
-		return letters;
-	}
+//	private Character[] getSectionLetters() {
+//		Character[] letters = new Character[mSectionIndices.length];
+//		for (int i = 0; i < mSectionIndices.length; i++) {
+//			letters[i] = mCountries[mSectionIndices[i]].charAt(0);
+//		}
+//		return letters;
+//	}
 
 	@Override
 	public int getCount() {
@@ -138,7 +139,14 @@ public class RightAdapter extends BaseAdapter implements StickyListHeadersAdapte
         holder.mProductNameTextView.setText(mProductNameString);
         String mProductPriceString = String.format("价格: %s 元/份", mProducts.get(position).mPrice);
         holder.mProductPriceTextView.setText(mProductPriceString);
-        int num = mOrderCacheLists.get(position).mNumber;
+        Order order = OrderManager.getInstance().getOrderByProductId(position);
+        int num = 0;
+        if(order == null){
+        	    num = 0;
+        }
+        else{
+        	    num = order.mNumber;
+        }
 		if (num == 0) {
 			holder.mSubButton.setVisibility(View.INVISIBLE);
 			holder.mTextview.setVisibility(View.INVISIBLE);
@@ -159,10 +167,17 @@ public class RightAdapter extends BaseAdapter implements StickyListHeadersAdapte
 			// TODO Auto-generated method stub
 			if(v!=null){
 				int position = (Integer) v.getTag();
-				Order order = mOrderCacheLists.get(position);
-				order.mNumber--;
-				if(order.mNumber<0){
-					order.mNumber =0;
+				OrderManager manager = OrderManager.getInstance();
+				Order order =null;
+				if(manager.isExistByProductId(position)){
+					order = manager.getOrderByProductId(position);
+					order.mNumber--;
+					if(order.mNumber==0){
+						manager.getOrderCacheLists().remove(order);
+					}
+				}
+				else{
+					
 				}
 				LinearLayout parent = (LinearLayout) v.getParent();
 				Log.d("RightAdapter", "order.mNumber:"+order.mNumber);
@@ -199,9 +214,27 @@ public class RightAdapter extends BaseAdapter implements StickyListHeadersAdapte
 			
 			if(v!=null){
 				int position = (Integer) v.getTag();
+				Product product = mProducts.get(position);
+				if(product.mMarkStrings!=null && product.mMarkStrings.size()!=0){
+					if(mProductListener!=null){
+						mProductListener.ProductDetailList(position);
+					}
+				}
 				Log.d("RightAdapter", "position:"+position+",,,v:"+v);
-				Order order = mOrderCacheLists.get(position);
-				order.mNumber++;
+				OrderManager manager = OrderManager.getInstance();
+				Order order;
+				if(manager.isExistByProductId(position)){
+					order = manager.getOrderByProductId(position);
+					order.mNumber ++;
+				}
+				else{
+					order = new Order();
+					order.mNumber++;
+					order.mOrderID = position;
+					order.mProduct = mProducts.get(position);
+					order.mPrice = mProducts.get(position).mPrice;
+					manager.getOrderCacheLists().add(order);
+				}
 				LinearLayout parent = (LinearLayout) v.getParent();
 				Log.d("RightAdapter", "order.mNumber:"+order.mNumber);
 				if(order.mNumber>0){
@@ -219,6 +252,7 @@ public class RightAdapter extends BaseAdapter implements StickyListHeadersAdapte
 				}
 				if(mOrderListener !=null){
 					mOrderListener.OrderChanged((int)order.mProduct.mID);
+					Log.d("RightAdapter", "===id:"+order.mProduct.mID);
 				}
 //				Toast tst = Toast.makeText(mContext, v.getTag().toString(), Toast.LENGTH_SHORT);
 //		        tst.show();
@@ -281,17 +315,17 @@ public class RightAdapter extends BaseAdapter implements StickyListHeadersAdapte
 	}
 
 	public void clear() {
-		mCountries = new String[0];
-		mSectionIndices = new int[0];
-		mSectionLetters = new Character[0];
-		notifyDataSetChanged();
+//		mCountries = new String[0];
+//		mSectionIndices = new int[0];
+//		mSectionLetters = new Character[0];
+//		notifyDataSetChanged();
 	}
 
 	public void restore() {
-		mCountries = mContext.getResources().getStringArray(R.array.countries);
-		mSectionIndices = getSectionIndices();
-		mSectionLetters = getSectionLetters();
-		notifyDataSetChanged();
+//		mCountries = mContext.getResources().getStringArray(R.array.countries);
+//		mSectionIndices = getSectionIndices();
+//		mSectionLetters = getSectionLetters();
+//		notifyDataSetChanged();
 	}
 
 	class HeaderViewHolder {
