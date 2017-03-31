@@ -1,0 +1,64 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/setting_layout"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context="com.ch.menuapp.SettingActivity" >
+    
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:background="#0093fe"
+        android:orientation="horizontal" >
+        <Button
+            android:id="@+id/backbutton"
+            android:layout_width="0dp"
+            android:layout_height="50dp"
+            android:layout_weight="1"
+            android:gravity="left"
+            android:background="#0093fe"
+            android:textSize="12dp"
+            android:text=" 返回"/>
+         <!-- android:layout_marginLeft="3dp" -->
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="2"
+            android:text="设置"
+            android:textSize="18dp"
+            android:gravity="center"
+            android:textColor="#ffffff"/>
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"/>
+        
+    </LinearLayout>
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_marginTop="50dp"
+        android:orientation="horizontal" 
+        android:background="#ffffff">
+        <!-- <ProgressBar
+            android:id="@+id/pb_progressbar"
+            android:layout_width="match_parent"
+            android:layout_height="20dp"
+            android:background="#00aa00"
+            android:max="100"
+            android:progress="50" /> -->
+
+        <TextView
+            android:id="@+id/updatestatus"
+            android:layout_width = "wrap_content"
+            android:layout_height="40dp"/>
+        <Button 
+            android:id="@+id/updatedata"
+            android:layout_width = "60dp"
+            android:layout_height="40dp"
+            android:text="更新"/>
+
+        
+    </LinearLayout>
+
+</RelativeLayout>

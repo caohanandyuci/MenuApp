@@ -16,5 +16,7 @@ public class Order {
 	
 	public List<String> mMarkList = null;
 	
-	public String mCommentString = null;
+	public int MarkId = -1;
+	
+	public String mCommentString = "";
 }

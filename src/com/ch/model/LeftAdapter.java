@@ -1,22 +1,29 @@
 package com.ch.model;
 
 import java.util.List;
+import java.util.Observable;
+import java.util.Observer;
 
+import com.ch.entity.OrderManager;
 import com.ch.entity.Product;
 import com.ch.menuapp.R;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
+import android.content.res.ColorStateList;
 import android.graphics.Color;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
+import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
 
 
-public class LeftAdapter extends BaseAdapter {
+public class LeftAdapter extends BaseAdapter implements Observer{
 
 	private List<String> list = null;
     private Context mContext;
@@ -91,20 +98,48 @@ public class LeftAdapter extends BaseAdapter {
 	@SuppressLint("ViewHolder")
 	public View getView(int position, View convertView, ViewGroup parent) {
 		// TODO Auto-generated method stub
-		
-		convertView = LayoutInflater.from(mContext).inflate(
-				R.layout.category_list, null);
-		TextView textView = (TextView) convertView.findViewById(R.id.name);
-		textView.setText(list.get(position));
+		ViewHolder holder;
+		if(convertView == null){
+			holder = new ViewHolder();
+			convertView = LayoutInflater.from(mContext).inflate(R.layout.category_list, null);
+			holder.mTextname = (TextView) convertView.findViewById(R.id.name);
+			holder.mTextcount = (TextView) convertView.findViewById(R.id.count);
+			convertView.setTag(holder);
+		}else{
+			holder = (ViewHolder) convertView.getTag();
+		}
+		holder.mTextname.setText(list.get(position));
 		if (position == selectItem) {
-			textView.setBackgroundColor(Color.RED);
+			holder.mTextname.setBackgroundColor(Color.parseColor("#5CACEE"));
 		} else {
-			textView.setBackgroundColor(Color.WHITE);
+			//holder.mTextname.setTextColor(Color.parseColor("#222222"));
+			holder.mTextname.setBackgroundColor(Color.parseColor("#ffffff"));
+		}
+		int count = OrderManager.getInstance().getCategoryCount(position);
+		if(count >0){
+			holder.mTextcount.setVisibility(View.VISIBLE);
+			holder.mTextcount.setTextColor(Color.WHITE);
+			holder.mTextcount.setGravity(Gravity.CENTER_VERTICAL | Gravity.CENTER);
+			holder.mTextcount.setTextSize(10);
+			holder.mTextcount.setText(String.valueOf(count));
+		}
+		else{
+			holder.mTextcount.setVisibility(View.INVISIBLE);
 		}
 		convertView.setBackgroundDrawable(mContext.getResources().getDrawable(
 				R.layout.list_item_selector));
 		return convertView;
 	}
-	
+	class ViewHolder {
+		TextView mTextname;
+		//产品个数
+		TextView mTextcount;
+		
+	}
+	@Override
+	public void update(Observable observable, Object data) {
+		// TODO Auto-generated method stub
+		notifyDataSetInvalidated();
+	}
 
 }

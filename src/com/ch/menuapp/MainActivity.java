@@ -2,14 +2,18 @@ package com.ch.menuapp;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Observable;
+import java.util.Observer;
 
 import se.emilsjolander.stickylistheaders.StickyListHeadersListView;
 import se.emilsjolander.stickylistheaders.StickyListHeadersListView.OnStickyHeaderChangedListener;
 
+import com.ch.entity.DataManager;
 import com.ch.entity.Order;
 import com.ch.entity.OrderManager;
 import com.ch.entity.Product;
 import com.ch.entity.ProductManager;
+import com.ch.httputils.OKHttpUtils;
 import com.ch.model.LeftAdapter;
 import com.ch.model.OrderListAdapter;
 import com.ch.model.OrderListener;
@@ -40,7 +44,7 @@ import android.widget.PopupWindow.OnDismissListener;
 import android.widget.TextView;
 import android.widget.Toast;
 
-public class MainActivity extends Activity implements ProductListener ,OrderListener,OnStickyHeaderChangedListener{
+public class MainActivity extends Activity implements ProductListener ,OrderListener,OnStickyHeaderChangedListener,Observer{
 
 	private ProductManager mProductManager = new ProductManager();
 
@@ -49,11 +53,12 @@ public class MainActivity extends Activity implements ProductListener ,OrderList
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_main);
-		OrderManager.getInstance().Init();
-		View popupView = getLayoutInflater().inflate(R.layout.layout_orderdetails, null);
-		//ListView mOrderListView = (ListView) popupView.findViewById(R.id.orders);
-		//OrderListAdapter mOrderListAdapter = new OrderListAdapter(this,mOrderManager);
-		//mOrderListView.setAdapter(mOrderListAdapter);
+		OrderManager.getInstance().Init(mProductManager);
+		OrderManager.getInstance().addObserver(this);
+		Log.d("MainActivity", "SavePath:"+(Const.SAVE_PATH));
+		//OKHttpUtils.DownLoadFileAsyn(Const.DOWNLOAD_SERVER_URL,Const.SAVE_PATH);
+		OrderDetailsView popupView = (OrderDetailsView) getLayoutInflater().inflate(R.layout.layout_orderdetails, null);
+		popupView.setMainActivity(this);
 		mOrderList = new PopupWindow(popupView, LayoutParams.MATCH_PARENT, LayoutParams.WRAP_CONTENT, true);
 		mOrderList.setTouchable(true);
 		mOrderList.setOutsideTouchable(true);
@@ -70,7 +75,7 @@ public class MainActivity extends Activity implements ProductListener ,OrderList
 	    });
 		
 		
-		mProductManager.setProducts(Product.getTestData());
+		mProductManager.setProducts(DataManager.getInstance().getProductList());
 		// 初始化左侧产品分类列表
 		InitLeftCategoryList();
 		mTotalPriceView = (TextView) findViewById(R.id.totalprice);
@@ -105,20 +110,25 @@ public class MainActivity extends Activity implements ProductListener ,OrderList
 		
 	}
 
+	private void entryWelcomeActivity(){
+		Intent mIntent = new Intent();
+		mIntent.setClass(MainActivity.this, WelcomeActivity.class);
+		mIntent.addFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT); 
+		MainActivity.this.startActivity(mIntent);
+	}
+	
 	private View.OnClickListener mBackButtonListener = new View.OnClickListener() {
 		@Override
 		public void onClick(View v) {
 			// TODO Auto-generated method stub
-			Intent mIntent = new Intent();
-			mIntent.setClass(MainActivity.this, WelcomeActivity.class);
-			mIntent.addFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT); 
-			MainActivity.this.startActivity(mIntent);
+			entryWelcomeActivity();
 		}
 	};
 	
 	private void InitLeftCategoryList() {
 		this.leftListView = (ListView) findViewById(R.id.left);
 		final LeftAdapter leftAdapter = new LeftAdapter(this, mProductManager.getCategoryList());
+		OrderManager.getInstance().addObserver(leftAdapter);
 		this.leftListView.setAdapter(leftAdapter);
 		this.leftListView.setOnItemClickListener(new ListView.OnItemClickListener() {
 			@Override
@@ -142,30 +152,41 @@ public class MainActivity extends Activity implements ProductListener ,OrderList
 	private StickyListHeadersListView stickyList; // 右侧商品listview
 	private ListView leftListView; // 左侧--商品类型listview
 	private RightAdapter rightAdapter; // 右侧adapter
-
-	private TextView buyNumView;// 购物车上的数量标签
-	private TextView selectedView;
-	private View titleLayout;
-	private TextView title;
-	private ListView popuListView;
 	private TextView mTotalPriceView = null;
 
+	public RightAdapter getRightAdapter(){
+		return rightAdapter;
+	}
+	
 	private View.OnClickListener mCreateOrderClickListener = new View.OnClickListener() {
 		@Override
 		public void onClick(View v) {
 			// TODO Auto-generated method stub
-//			Intent mIntent = new Intent();
-//			mIntent.setClass(MainActivity.this, ShopCarActivity.class);
-//			mIntent.addFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT); 
-//			MainActivity.this.startActivity(mIntent);
-//			overridePendingTransition(R.anim.in_from_right, R.anim.out_to_left);
-//			if (mOrderList != null && !mOrderList.isShowing()) {
-//				mOrderList.showAtLocation(findViewById(R.id.main_layout), Gravity.BOTTOM, 0, 0);
-//				setBackgroundAlpha(0.5f);
-//			   
-//            }
-			Toast tst = Toast.makeText(MainActivity.this, "下单成功！", Toast.LENGTH_SHORT);
-	        tst.show();
+			int count = OrderManager.getInstance().getTotalCount();
+			if (count > 0) {
+				final String orderString = OrderManager.getInstance()
+						.printfOrderString();
+				Log.d("MainActivity", "String:" + orderString);
+				Thread thread = new Thread(new Runnable() {
+					@Override
+					public void run() {
+						// TODO Auto-generated method stub
+						OKHttpUtils.UpLoadFileAsyn(Const.UPLOAD_SERVER_URL,
+								orderString);
+					}
+				});
+				thread.start();
+				Toast tst = Toast.makeText(MainActivity.this, "下单成功！",
+						Toast.LENGTH_SHORT);
+				tst.show();
+				OrderManager.getInstance().clearOrders();
+				entryWelcomeActivity();
+				finish();
+			}else{
+				Toast tst = Toast.makeText(MainActivity.this, "还没有添加菜品！",
+						Toast.LENGTH_SHORT);
+				tst.show();
+			}
 		}
 	};
 
@@ -174,11 +195,15 @@ public class MainActivity extends Activity implements ProductListener ,OrderList
 		@Override
 		public void onClick(View v) {
 			// TODO Auto-generated method stub
-			Intent mIntent = new Intent();
-			mIntent.setClass(MainActivity.this, ShopCarActivity.class);
-			mIntent.addFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT); 
-			MainActivity.this.startActivity(mIntent);
-			overridePendingTransition(R.anim.in_from_right, R.anim.out_to_left);
+			int count = OrderManager.getInstance().getTotalCount();
+			if (count > 0) {
+				Intent mIntent = new Intent();
+				mIntent.setClass(MainActivity.this, ShopCarActivity.class);
+				mIntent.addFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
+				MainActivity.this.startActivity(mIntent);
+				overridePendingTransition(R.anim.in_from_right,
+						R.anim.out_to_left);
+			}
 		}
 	};
 	
@@ -202,23 +227,16 @@ public class MainActivity extends Activity implements ProductListener ,OrderList
 	}
 
 	@Override
-	public void PriceChanged(float totalprice) {
-		// TODO Auto-generated method stub
-		String priceString = "金额:￥ " + String.valueOf(totalprice);
-		mTotalPriceView.setText(priceString);
-	}
-
-	@Override
 	public void OrderChanged(int position) {
 		// TODO Auto-generated method stub
-		Log.d("MainActivity", "OrderChanged position:"+position);
-		Order order = OrderManager.getInstance().getOrderByProductId(position);
-		int categoryitem = -1;
-		if(order!=null){
-			categoryitem = order.mProduct.mCategory;
-		}
+//		Log.d("MainActivity", "OrderChanged position:"+position);
+//		Order order = OrderManager.getInstance().getOrderByProductId(position);
+//		int categoryitem = -1;
+//		if(order!=null){
+//			categoryitem = order.mProduct.mCategory;
+//		}
 		//int num = OrderManager.getInstance().getTotalCateCountByProduct(position);
-		LeftAdapter adapter = ((LeftAdapter)this.leftListView.getAdapter());
+//		LeftAdapter adapter = ((LeftAdapter)this.leftListView.getAdapter());
 		//Log.d("MainActivity", "OrderChanged num:"+num+",,categoryitem:"+categoryitem);
 		//adapter.update(this.leftListView, categoryitem, num);
 		
@@ -232,7 +250,7 @@ public class MainActivity extends Activity implements ProductListener ,OrderList
 		LeftAdapter adapter = ((LeftAdapter)this.leftListView.getAdapter());
 		adapter.setSelectItem((int)headerId);
 		adapter.UpdateSelectItem(this.leftListView,(int)headerId);
-		//adapter.notifyDataSetInvalidated();
+		adapter.notifyDataSetInvalidated();
 	}
 	
 	
@@ -254,17 +272,37 @@ public class MainActivity extends Activity implements ProductListener ,OrderList
 		// TODO Auto-generated method stub
 		if (mOrderList != null && !mOrderList.isShowing()) {
 			OrderDetailsView detailsView = (OrderDetailsView) mOrderList.getContentView();
-			Product product = mProductManager.getProductByID(position);
+			Product product = mProductManager.mProducts.get(position);
 			Log.d("MainActivity", "product:"+product);
-			detailsView.setRemarkContainerLayout(product.mSpecStrings);
-			detailsView.setCommentContainerLayout(product.mMarkStrings);
-			detailsView.setOKOnclick(mOrderList);
-			mOrderList.showAtLocation(findViewById(R.id.main_layout),
-					Gravity.BOTTOM, 0, 0);
-			setBackgroundAlpha(0.5f);
-
+			if (product != null) {
+				detailsView.setProductId(position);
+				detailsView.setRemarkContainerLayout(product.mSpecStrings);
+				detailsView.setCommentContainerLayout(product.mMarkStrings);
+				detailsView.setOKOnclick(mOrderList);
+				mOrderList.showAtLocation(findViewById(R.id.main_layout),
+						Gravity.BOTTOM, 0, 0);
+				setBackgroundAlpha(0.5f);
+			}
 		}
-		
+	}
+
+	@Override
+	public void update(Observable observable, Object data) {
+		// TODO Auto-generated method stub
+		float totalprice = OrderManager.getInstance().getTotalPrice();
+		String priceString = "金额:￥ " + String.valueOf(totalprice);
+		mTotalPriceView.setText(priceString);
+		int count = OrderManager.getInstance().getTotalCount();
+		TextView countTextView = (TextView) findViewById(R.id.ordercount);
+		Log.d("MainActivity", "update count:"+count);
+		if(count>0){
+			countTextView.setVisibility(View.VISIBLE);
+		}
+		else{
+			countTextView.setVisibility(View.INVISIBLE);
+		}
+		countTextView.setGravity(Gravity.CENTER_VERTICAL | Gravity.CENTER);
+		countTextView.setText(String.valueOf(count));
 		
 	}
 	

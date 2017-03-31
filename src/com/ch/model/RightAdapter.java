@@ -137,7 +137,7 @@ public class RightAdapter extends BaseAdapter implements StickyListHeadersAdapte
 		holder.mImageView.setImageDrawable(mContext.getResources().getDrawable(R.drawable.timg));
 		String mProductNameString = String.format("名称: %s", mProducts.get(position).mProductName);
         holder.mProductNameTextView.setText(mProductNameString);
-        String mProductPriceString = String.format("价格: %s 元/份", mProducts.get(position).mPrice);
+        String mProductPriceString = String.format("价格: %s 元/%s", mProducts.get(position).mPrice,mProducts.get(position).mUnitString);
         holder.mProductPriceTextView.setText(mProductPriceString);
         Order order = OrderManager.getInstance().getOrderByProductId(position);
         int num = 0;
@@ -179,29 +179,12 @@ public class RightAdapter extends BaseAdapter implements StickyListHeadersAdapte
 				else{
 					
 				}
-				LinearLayout parent = (LinearLayout) v.getParent();
-				Log.d("RightAdapter", "order.mNumber:"+order.mNumber);
-				if(order.mNumber==0){
-					parent.getChildAt(0).setVisibility(View.INVISIBLE);
-					parent.getChildAt(1).setVisibility(View.INVISIBLE);
-					((TextView)parent.getChildAt(1)).setText(String.valueOf(order.mNumber));
-				}
-				((TextView)parent.getChildAt(1)).setText(String.valueOf(order.mNumber));
-				
-				if(mProductListener!=null){
-					float totalprice = 0.0f;
-					for(Order o:mOrderCacheLists){
-						totalprice += o.mPrice*o.mNumber;
-					}
-					mProductListener.PriceChanged(totalprice);
-				}
+				notifyDataSetInvalidated();
+				OrderManager.getInstance().notifyOrderObserver();
 				if(mOrderListener !=null){
 					mOrderListener.OrderChanged(position);
 				}
 			}
-			
-//			Toast tst = Toast.makeText(mContext, v.getTag().toString(), Toast.LENGTH_SHORT);
-//	        tst.show();
 		}
 
 	};
@@ -219,43 +202,28 @@ public class RightAdapter extends BaseAdapter implements StickyListHeadersAdapte
 					if(mProductListener!=null){
 						mProductListener.ProductDetailList(position);
 					}
-				}
-				Log.d("RightAdapter", "position:"+position+",,,v:"+v);
-				OrderManager manager = OrderManager.getInstance();
-				Order order;
-				if(manager.isExistByProductId(position)){
-					order = manager.getOrderByProductId(position);
-					order.mNumber ++;
-				}
-				else{
-					order = new Order();
-					order.mNumber++;
-					order.mOrderID = position;
-					order.mProduct = mProducts.get(position);
-					order.mPrice = mProducts.get(position).mPrice;
-					manager.getOrderCacheLists().add(order);
-				}
-				LinearLayout parent = (LinearLayout) v.getParent();
-				Log.d("RightAdapter", "order.mNumber:"+order.mNumber);
-				if(order.mNumber>0){
-					parent.getChildAt(0).setVisibility(View.VISIBLE);
-					parent.getChildAt(1).setVisibility(View.VISIBLE);
-					((TextView)parent.getChildAt(1)).setText(String.valueOf(order.mNumber));
-				}
-				
-				if(mProductListener!=null){
-					float totalprice = 0.0f;
-					for(Order o:mOrderCacheLists){
-						totalprice += o.mPrice*o.mNumber;
+				} else {
+					Log.d("RightAdapter", "position:" + position + ",,,v:" + v);
+					OrderManager manager = OrderManager.getInstance();
+					Order order;
+					if (manager.isExistByProductId(position)) {
+						order = manager.getOrderByProductId(position);
+						order.mNumber++;
+					} else {
+						order = new Order();
+						order.mNumber++;
+						order.mOrderID = position;
+						order.mProduct = mProducts.get(position);
+						order.mPrice = mProducts.get(position).mPrice;
+						manager.getOrderCacheLists().add(order);
 					}
-					mProductListener.PriceChanged(totalprice);
+					notifyDataSetInvalidated();
+					OrderManager.getInstance().notifyOrderObserver();
+					if (mOrderListener != null) {
+						mOrderListener.OrderChanged((int) order.mProduct.mID);
+						Log.d("RightAdapter", "===id:" + order.mProduct.mID);
+					}
 				}
-				if(mOrderListener !=null){
-					mOrderListener.OrderChanged((int)order.mProduct.mID);
-					Log.d("RightAdapter", "===id:"+order.mProduct.mID);
-				}
-//				Toast tst = Toast.makeText(mContext, v.getTag().toString(), Toast.LENGTH_SHORT);
-//		        tst.show();
 			}
 		}
 

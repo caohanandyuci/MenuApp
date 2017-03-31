@@ -65,7 +65,8 @@ public class OrderListAdapter extends BaseAdapter implements StickyListHeadersAd
 	@Override
 	public long getItemId(int position) {
 		// TODO Auto-generated method stub
-		return 0;
+		Log.d(TAG, "OrderListAdapter getItemId:"+position);
+		return 1;
 	}
 
 	@Override
@@ -93,6 +94,8 @@ public class OrderListAdapter extends BaseAdapter implements StickyListHeadersAd
 		holder.mSubButton.setBackground(mContext.getResources().getDrawable(R.drawable.sub));
 		holder.mSubButton.setOnClickListener(mSubOnClickListener);
 		holder.mSubButton.setTag(position);
+		holder.mAddButton.setVisibility(View.INVISIBLE);
+		holder.mSubButton.setVisibility(View.INVISIBLE);
 		holder.mImageView.setImageDrawable(mContext.getResources().getDrawable(R.drawable.timg));
 		String mNumberNameString = String.format("%s",getOrderLists().get(position).mNumber);
 		holder.mTextview.setText(mNumberNameString);
@@ -170,7 +173,8 @@ public class OrderListAdapter extends BaseAdapter implements StickyListHeadersAd
 		} else {
 			holder = (HeaderViewHolder) convertView.getTag();
 		}
-
+		
+		Log.d(TAG, "getHeaderView position:"+position+",,mCategory"+getOrderLists().get(position).mProduct.mCategory);
 		String category = Product.list[getOrderLists().get(position).mProduct.mCategory];
 		holder.text.setText(category);
 		return convertView;
@@ -180,5 +184,6 @@ public class OrderListAdapter extends BaseAdapter implements StickyListHeadersAd
 	public long getHeaderId(int position) {
 		// TODO Auto-generated method stub
 		//return OrderManager.getInstance().getOrderByProductId(position).mProduct.mCategory;
-		return 0;
+		Log.d(TAG, "OrderListAdapter getHeaderId:"+position);
+		return getOrderLists().get(position).mProduct.mCategory;
 	}}

@@ -3,32 +3,44 @@ package com.ch.entity;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.google.gson.annotations.SerializedName;
+
 import android.R.string;
 
 public class Product {
 	public String nameString="";
 	//商品索引值
+	@SerializedName("id")  
 	public long mID = -1;  
 	//商品描述
+	@SerializedName("description")  
 	public String mDescirption = ""; 
 	//商品名称
+	@SerializedName("name")  
 	public String mProductName = "";
 	//商品价格
+	@SerializedName("price")  
 	public float mPrice = -1;
 	//商品图片
+	@SerializedName("url")  
 	public String mImageUrlString = "";
 	//商品分类
+	@SerializedName("category")  
 	public int mCategory = 0;
 	//商品的计量单位
+	@SerializedName("unitstring")  
 	public String mUnitString = unitStrings[1];
 	
 	//产品的计量方式 0:标准计量方式按照克或者个计算，1:分为大份\中份\小份
+	@SerializedName("mode")  
 	public int mMode = 0;
 	//是否卖光
+	@SerializedName("exist")  
 	public boolean mExist = true;
-	
+	@SerializedName("specs")  
 	public List<Spec> mSpecStrings = null;
 	//口味标记
+	@SerializedName("mark")
 	public List<String> mMarkStrings = null;
 	
 	
@@ -36,7 +48,9 @@ public class Product {
 	
 	public static class Spec{
 		//描述大份\中份\小份
+		@SerializedName("spec")
 		public String mDescirption="";
+		@SerializedName("price")
 		public float mPrice = 0.0f;
 		@Override
 		public String toString() {

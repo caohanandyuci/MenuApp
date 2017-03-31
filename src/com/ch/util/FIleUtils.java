@@ -1,7 +1,12 @@
 package com.ch.util;
 
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.zip.ZipEntry;
+import java.util.zip.ZipInputStream;
 
 import com.ch.entity.Order;
 
@@ -9,9 +14,12 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.text.StaticLayout;
+import android.util.Log;
 
 public class FIleUtils {
 	public final static String FILE_PATH = "order";
+	
+	private final static String TAG = "FileUtils";
 	
 	public static void SaveOrder(Context context, List<Order> orders) {
 		SharedPreferences sharedPreferences = context.getSharedPreferences(FILE_PATH, Activity.MODE_PRIVATE);
@@ -32,5 +40,42 @@ public class FIleUtils {
         
 		return lists;
 	}
+	
+	public static void UnZipFolder(String zipFileString, String outPathString) throws Exception {    
+		Log.d(TAG, "UnZipFolder start filestring:"+zipFileString+",,outPathString:"+outPathString);
+		
+        ZipInputStream inZip = new ZipInputStream(new FileInputStream(zipFileString));    
+        ZipEntry zipEntry;    
+        String szName = ""; 
+        Log.d(TAG, "inZip:"+inZip.toString());
+        while ((zipEntry = inZip.getNextEntry()) != null) {    
+            szName = zipEntry.getName();    
+            if (zipEntry.isDirectory()) {    
+                // get the folder name of the widget    
+                szName = szName.substring(0, szName.length() - 1);    
+                File folder = new File(outPathString + File.separator + szName);    
+                boolean flag = folder.mkdirs();
+                Log.d(TAG, "mkdirs flag:"+flag);
+            } else {    
+              	Log.d(TAG, "mkdirs szName:"+(outPathString + File.separator + szName));
+                File file = new File(outPathString + File.separator + szName);    
+                file.createNewFile();    
+                // get the output stream of the file    
+                FileOutputStream out = new FileOutputStream(file);    
+                int len;    
+                byte[] buffer = new byte[1024];    
+                // read (len) bytes into buffer    
+                while ((len = inZip.read(buffer)) != -1) {    
+                    // write (len) byte from buffer at the position 0    
+                    out.write(buffer, 0, len);    
+                    out.flush();    
+                }    
+                out.close();    
+            }    
+        }   
+        inZip.close();   
+        
+        Log.d(TAG, "UnZipFolder end");
+    }  
 	
 }

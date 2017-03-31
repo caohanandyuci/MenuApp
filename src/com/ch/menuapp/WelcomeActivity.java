@@ -16,6 +16,8 @@ public class WelcomeActivity extends Activity {
 		setContentView(R.layout.welcome_activity);
 		mStartButton = (Button) findViewById(R.id.start);
 		mStartButton.setOnClickListener(mOnClickListener);
+		mSettingButton = (Button) findViewById(R.id.setter);
+		mSettingButton.setOnClickListener(mSettingOnClickListener);
 	}
 	private Button mStartButton = null;
 	
@@ -30,5 +32,16 @@ public class WelcomeActivity extends Activity {
 			WelcomeActivity.this.startActivity(mIntent);
 		}
 	};
-	
+	private Button mSettingButton = null;
+    private View.OnClickListener mSettingOnClickListener  = new OnClickListener() {
+		
+		@Override
+		public void onClick(View v) {
+			// TODO Auto-generated method stub
+			Intent mIntent = new Intent();
+			mIntent.setClass(WelcomeActivity.this, SettingActivity.class);
+			mIntent.addFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT); 
+			WelcomeActivity.this.startActivity(mIntent);
+		}
+	};
 }
