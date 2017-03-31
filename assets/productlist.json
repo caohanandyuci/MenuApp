@@ -1,57 +1,79 @@
 {
-	"error_code": 1000,
-	"list_id": 100,
-	"publish_time": 1486450910000,
-	"product_list": [{
-		"id": 1,
-		"name": "推荐",
-		"description": "这个是商品的描述",
-		"price": "25",
-		"url": "1.png",
-		"group": 1,
-		"unitstring": "份",
-		"mode": 1,
-		"exist": "true",
-		"specs": [{
-			"spec": "大份",
-			"price": 140
-		},
-		{
-			"spec": "中份",
-			"price": "120"
-		},
-		{
-			"spec": "小份",
-			"price": "100"
-		}],
-		"mark": ["少糖",
-		"微辣",
-		"特辣"]
-	},
-	{
-		"id": 2,
-		"name": "应用",
-		"description": "这个是商品的描述",
-		"price": "25",
-		"url": "1.png",
-		"group": 2,
-		"unitstring": "克",
-		"mode": 0,
-		"exist": "true",
-		"specs": [{
-			"spec": "大份",
-			"price": 140
-		},
-		{
-			"spec": "中份",
-			"price": "120"
-		},
-		{
-			"spec": "小份",
-			"price": "100"
-		}],
-		"mark": ["少糖",
-		"微辣",
-		"特辣"]
-	}]
+    "error_code": 1000,
+    "list_id": 100,
+    "publish_time": 1486450910000,
+    "category_list": [
+        "干锅",
+        "凉菜",
+        "热菜",
+        "汤",
+        "粥",
+        "蒸菜",
+        "特价菜",
+        "套餐"
+    ],
+    "product_list": [
+        {
+            "id": 100,
+            "name": "推荐",
+            "description": "这个是商品的描述",
+            "price": "15",
+            "url": "1.png",
+            "group": 1,
+            "unitstring": "份",
+            "category": 0,
+            "mode": 1,
+            "exist": "true",
+            "specs": [
+                {
+                    "spec": "大份",
+                    "price": 140
+                },
+                {
+                    "spec": "中份",
+                    "price": "120"
+                },
+                {
+                    "spec": "小份",
+                    "price": "100"
+                }
+            ],
+            "mark": [
+                "少糖",
+                "微辣",
+                "特辣"
+            ]
+        },
+        {
+            "id": 101,
+            "name": "应用",
+            "description": "这个是商品的描述",
+            "price": "25",
+            "url": "1.png",
+            "group": 2,
+            "unitstring": "克",
+            "category": 1,
+            "mode": 0,
+            "exist": "true",
+            "specs": [
+                {
+                    "spec": "大份",
+                    "price": 140
+                },
+                {
+                    "spec": "中份",
+                    "price": "120"
+                },
+                {
+                    "spec": "小份",
+                    "price": "100"
+                }
+            ],
+            "mark": [
+                "少糖",
+                "微辣",
+                "特辣"
+            ]
+        }
+    ]
 }
