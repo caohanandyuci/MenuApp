@@ -36,6 +36,7 @@ import android.view.View.OnClickListener;
 import android.view.ViewGroup.LayoutParams;
 import android.view.WindowManager;
 import android.widget.AdapterView;
+import android.widget.AdapterView.OnItemClickListener;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.ListView;
@@ -44,7 +45,7 @@ import android.widget.PopupWindow.OnDismissListener;
 import android.widget.TextView;
 import android.widget.Toast;
 
-public class MainActivity extends Activity implements ProductListener ,OrderListener,OnStickyHeaderChangedListener,Observer{
+public class MainActivity extends Activity implements ProductListener ,OrderListener,OnStickyHeaderChangedListener,Observer,OnItemClickListener{
 
 	private ProductManager mProductManager = new ProductManager();
 
@@ -87,7 +88,7 @@ public class MainActivity extends Activity implements ProductListener ,OrderList
 		rightAdapter.setProductListener(this);
 		rightAdapter.setOrderListener(this);
 		stickyList = (StickyListHeadersListView) findViewById(R.id.rightlist);
-		// stickyList.setOnItemClickListener(this);
+		stickyList.setOnItemClickListener(this);
 		// stickyList.setOnHeaderClickListener(this);
 		stickyList.setOnStickyHeaderChangedListener(this);
 		stickyList.setFastScrollEnabled(false);
@@ -304,6 +305,11 @@ public class MainActivity extends Activity implements ProductListener ,OrderList
 		countTextView.setGravity(Gravity.CENTER_VERTICAL | Gravity.CENTER);
 		countTextView.setText(String.valueOf(count));
 		
+	}
+
+	@Override
+	public void onItemClick(AdapterView<?> parent, View view, int position,long id) {
+		// TODO Auto-generated method stub
 	}
 	
 }

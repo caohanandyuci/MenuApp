@@ -1,5 +1,6 @@
 package com.ch.entity;
 
+import java.io.InputStream;
 import java.util.List;
 
 import com.ch.menuapp.Const;
@@ -30,14 +31,15 @@ public class DataManager {
 		mContext = ctx;
 	}
 	public boolean readData(){
-		mProductManager= (CommonsUtils.GsonToBean(mContext, ProductManager.class, Const.PRODUCT_LIST));
+		InputStream stream = CommonsUtils.openFileInputStream(Const.DIR_PATH+Const.PRODUCT_LIST);
+		if (stream != null) {
+			mProductManager = (CommonsUtils.GsonToBean(mContext,ProductManager.class, stream));
+			mProductManager.sortProducts();
+		}
 	    //Log.d(TAG, "productmanager:"+mProductManager.toString());
 		return true;
 	}
 	
-//	private String getAssetsDir(){
-//		
-//	}
 	
 	public List<Product> getProductList() {
 		return mProductManager.mProducts;

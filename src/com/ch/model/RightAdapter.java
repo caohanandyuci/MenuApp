@@ -4,10 +4,12 @@ import java.util.ArrayList;
 import java.util.List;
 
 import se.emilsjolander.stickylistheaders.StickyListHeadersAdapter;
+import uk.co.senab.bitmapcache.BitmapLruCache;
 
 import com.ch.entity.Order;
 import com.ch.entity.OrderManager;
 import com.ch.entity.Product;
+import com.ch.menuapp.Const;
 import com.ch.menuapp.MainActivity;
 import com.ch.menuapp.R;
 
@@ -15,6 +17,9 @@ import android.R.integer;
 import android.R.raw;
 import android.annotation.SuppressLint;
 import android.content.Context;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.graphics.drawable.BitmapDrawable;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -32,12 +37,15 @@ import android.widget.Toast;
 
 public class RightAdapter extends BaseAdapter implements StickyListHeadersAdapter, SectionIndexer {
 
+	private static String TAG = "RightAdapter";
 	private final Context mContext;
 	//private String[] mCountries;
 	private int[] mSectionIndices;
 	private Character[] mSectionLetters;
 	private LayoutInflater mInflater;
 
+	private BitmapLruCache mbitmapcache = null;
+	
 	private List<Product> mProducts = null;
 	private List<Order> mOrderCacheLists = null;
 	
@@ -53,6 +61,9 @@ public class RightAdapter extends BaseAdapter implements StickyListHeadersAdapte
 		mContext = context;
 		mInflater = LayoutInflater.from(context);
 		mProducts = products;
+		BitmapLruCache.Builder builder = new BitmapLruCache.Builder();
+        builder.setMemoryCacheEnabled(true).setMemoryCacheMaxSizeUsingHeapSize();
+		mbitmapcache = builder.build();
 		//mCountries = context.getResources().getStringArray(R.array.countries);
 //		mSectionIndices = getSectionIndices();
 //		mSectionLetters = getSectionLetters();
@@ -134,7 +145,15 @@ public class RightAdapter extends BaseAdapter implements StickyListHeadersAdapte
 		holder.mSubButton.setBackground(mContext.getResources().getDrawable(R.drawable.sub));
 		holder.mSubButton.setOnClickListener(mSubOnClickListener);
 		holder.mSubButton.setTag(position);
-		holder.mImageView.setImageDrawable(mContext.getResources().getDrawable(R.drawable.timg));
+		
+		String imageurlString = Const.DIR_PATH+Const.IMAGE_PATH+mProducts.get(position).mImageUrlString;
+		Log.d(TAG, "imageurl:"+imageurlString);
+		if(!mbitmapcache.contains(imageurlString)){
+			Bitmap bitmap = BitmapFactory.decodeFile(imageurlString);
+			mbitmapcache.put(imageurlString, bitmap);
+		}
+		BitmapDrawable drawable = (mbitmapcache.get(imageurlString));
+		holder.mImageView.setImageDrawable(drawable);
 		String mProductNameString = String.format("名称: %s", mProducts.get(position).mProductName);
         holder.mProductNameTextView.setText(mProductNameString);
         String mProductPriceString = String.format("价格: %s 元/%s", mProducts.get(position).mPrice,mProducts.get(position).mUnitString);

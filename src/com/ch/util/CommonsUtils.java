@@ -1,20 +1,42 @@
 package com.ch.util;
 
 import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.InputStreamReader;
 
 import com.google.gson.Gson;
 
 import android.content.Context;
+import android.util.Log;
 
 public class CommonsUtils {
 	private static Gson gson = new Gson();
-	public static <T> T GsonToBean(Context ctx,Class<T> cls,String filename){
+	private static String TAG = "CommonsUtils";
+	public static FileInputStream openFileInputStream(String filename){
+		if(filename!=null){
+			File file = new File(filename);
+			boolean exists = file.exists();
+			Log.d(TAG,"filepath:"+filename +",file exists:"+exists);
+			if(file.exists()){
+				try {
+					return new FileInputStream(file);
+				} catch (FileNotFoundException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+			}
+		}
+		return null;
+	}
+	
+	public static <T> T GsonToBean(Context ctx,Class<T> cls,InputStream inputStream){
 		T t  = null;
 		try {
-			InputStreamReader inputStreamReader = new InputStreamReader(ctx
-					.getAssets().open(filename), "UTF-8");
+			InputStreamReader inputStreamReader = new InputStreamReader(inputStream, "UTF-8");
 			BufferedReader bufferedReader = new BufferedReader(
 					inputStreamReader);// 使用BufferReader读取输入流中的数据；
 			String line;

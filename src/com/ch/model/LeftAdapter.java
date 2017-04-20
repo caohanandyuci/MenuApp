@@ -8,6 +8,7 @@ import com.ch.entity.OrderManager;
 import com.ch.entity.Product;
 import com.ch.menuapp.R;
 
+import android.R.color;
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.res.ColorStateList;
@@ -110,9 +111,10 @@ public class LeftAdapter extends BaseAdapter implements Observer{
 		}
 		holder.mTextname.setText(list.get(position));
 		if (position == selectItem) {
+			holder.mTextname.setTextColor(Color.parseColor("#000000"));
 			holder.mTextname.setBackgroundColor(Color.parseColor("#5CACEE"));
 		} else {
-			//holder.mTextname.setTextColor(Color.parseColor("#222222"));
+			holder.mTextname.setTextColor(Color.parseColor("#aaaaaa"));
 			holder.mTextname.setBackgroundColor(Color.parseColor("#ffffff"));
 		}
 		int count = OrderManager.getInstance().getCategoryCount(position);

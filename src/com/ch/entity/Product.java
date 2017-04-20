@@ -1,13 +1,14 @@
 package com.ch.entity;
 
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
 
 import com.google.gson.annotations.SerializedName;
 
 import android.R.string;
 
-public class Product {
+public class Product implements Comparable<Product>{
 	public String nameString="";
 	//商品索引值
 	@SerializedName("id")  
@@ -180,4 +181,10 @@ public class Product {
 		
 		return mList;
 	}
+	@Override
+	public int compareTo(Product another) {
+		// TODO Auto-generated method stub
+        return this.mCategory - another.mCategory; // 按书的id比较大小，用于默认排序
+	}
+
 }

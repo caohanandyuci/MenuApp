@@ -35,18 +35,18 @@ public class SettingActivity extends Activity {
 	private Button mUpdatedataButton = null;
 	private Button mBackButton=null;
 	private TextView mUpdateStatusTextView = null;
-	private boolean isNeedUpdate = false;
+	private boolean isNeedUpdate = true;
 	private View.OnClickListener mUpdateDataClickListener = new View.OnClickListener() {
 		
 		@Override
 		public void onClick(View v) {
 			// TODO Auto-generated method stub
 			Log.d(TAG, "onclick isNeedUpdate:"+isNeedUpdate);
-			if (isNeedUpdate == false) {
+			if (isNeedUpdate == true) {
 				mUpdateStatusTextView.setText("开始下载");
 				OKHttpUtils.DownLoadFileAsyn(Const.DOWNLOAD_SERVER_URL,
 						Const.SAVE_PATH, mDownLoadListener);
-				isNeedUpdate = true;
+				isNeedUpdate = false;
 			}
 		}
 	};
@@ -74,7 +74,7 @@ public class SettingActivity extends Activity {
 		@Override
 		public void onDownloadSuccess() {
 			// TODO Auto-generated method stub
-			isNeedUpdate= false;
+			isNeedUpdate= true;
 			Log.d(TAG, "onDownloadSuccess isNeedUpdate:"+isNeedUpdate);
 			mUpdateStatusTextView.post(new Runnable(){
 
@@ -90,7 +90,7 @@ public class SettingActivity extends Activity {
 		@Override
 		public void onDownloadFailed(final int errorCode) {
 			// TODO Auto-generated method stub
-			isNeedUpdate = false;
+			isNeedUpdate = true;
 			Log.d(TAG, "onDownloadFailed isNeedUpdate:"+isNeedUpdate);
 			mUpdateStatusTextView.post(new Runnable(){
 

@@ -2,6 +2,9 @@ package com.ch.entity;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
@@ -29,6 +32,20 @@ public class ProductManager {
 		}
 	}
 	
+	public void sortProducts(){
+		if(mProducts!=null){
+			Collections.sort(mProducts,new CategoryComparator());
+		}
+	}
+	static class CategoryComparator implements Comparator<Product> {
+
+		@Override
+		public int compare(Product lhs, Product rhs) {
+			// TODO Auto-generated method stub
+			return lhs.compareTo(rhs);
+		}  
+		
+    }  
 	@Override
 	public String toString() {
 		return "ProductManager [mErrorCode=" + mErrorCode + ", mListID="
