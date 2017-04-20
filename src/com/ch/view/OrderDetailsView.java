@@ -45,6 +45,7 @@ public class OrderDetailsView extends LinearLayout implements View.OnClickListen
 		mRemarkContainerLayout = (LinearLayout) findViewById(R.id.remarkcontainer);
 		mCommentContainerLayout = (LinearLayout) findViewById(R.id.commentcontainer);
 		mContext = context;
+		//getRemarkContLayout().getChildAt(0).setSelected(true);
 		setOnClickListener(this);
 
 	}
@@ -164,6 +165,7 @@ public class OrderDetailsView extends LinearLayout implements View.OnClickListen
 							order.mNumber++;
 						}
 					}
+					Log.d(TAG, "order number:"+order.mNumber);
 				}
 				else{
 					order = new Order();
@@ -172,6 +174,7 @@ public class OrderDetailsView extends LinearLayout implements View.OnClickListen
 					order.mProduct = OrderManager.getInstance().mProductManager.mProducts.get(mProductId);
 					order.mPrice = OrderManager.getInstance().mProductManager.mProducts.get(mProductId).mPrice;
 					OrderManager.getInstance().getOrderCacheLists().add(order);
+					
 				}
 			}
 			
@@ -232,6 +235,7 @@ public class OrderDetailsView extends LinearLayout implements View.OnClickListen
 			getRemarkContLayout().addView(textView,params);
 		}
 		getRemarkContLayout().getChildAt(0).setBackgroundColor(Color.parseColor("#66CD00"));
+		getRemarkContLayout().getChildAt(0).setSelected(true);
 		String priceString = String.format("价格: %s", remarks.get(0).mPrice);
 		getProducNameTextView().setText(priceString);
 	}

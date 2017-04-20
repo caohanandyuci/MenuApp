@@ -22,6 +22,8 @@ public class FIleUtils {
 	private final static String TAG = "FileUtils";
 	
 	public static void SaveOrder(Context context, List<Order> orders) {
+		String filenameString = "";
+		
 		SharedPreferences sharedPreferences = context.getSharedPreferences(FILE_PATH, Activity.MODE_PRIVATE);
 		// 实例化SharedPreferences.Editor对象
 		SharedPreferences.Editor editor = sharedPreferences.edit();
