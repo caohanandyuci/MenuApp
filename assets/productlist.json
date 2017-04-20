@@ -1,79 +1,470 @@
 {
-    "error_code": 1000,
-    "list_id": 100,
-    "publish_time": 1486450910000,
-    "category_list": [
-        "干锅",
-        "凉菜",
-        "热菜",
-        "汤",
-        "粥",
-        "蒸菜",
-        "特价菜",
-        "套餐"
-    ],
-    "product_list": [
-        {
-            "id": 100,
-            "name": "推荐",
-            "description": "这个是商品的描述",
-            "price": "15",
-            "url": "1.png",
-            "group": 1,
-            "unitstring": "份",
-            "category": 0,
-            "mode": 1,
-            "exist": "true",
-            "specs": [
-                {
-                    "spec": "大份",
-                    "price": 140
-                },
-                {
-                    "spec": "中份",
-                    "price": "120"
-                },
-                {
-                    "spec": "小份",
-                    "price": "100"
-                }
-            ],
-            "mark": [
-                "少糖",
-                "微辣",
-                "特辣"
-            ]
-        },
-        {
-            "id": 101,
-            "name": "应用",
-            "description": "这个是商品的描述",
-            "price": "25",
-            "url": "1.png",
-            "group": 2,
-            "unitstring": "克",
-            "category": 1,
-            "mode": 0,
-            "exist": "true",
-            "specs": [
-                {
-                    "spec": "大份",
-                    "price": 140
-                },
-                {
-                    "spec": "中份",
-                    "price": "120"
-                },
-                {
-                    "spec": "小份",
-                    "price": "100"
-                }
-            ],
-            "mark": [
-                "少糖",
-                "微辣",
-                "特辣"
-            ]
-        }
-    ]
+	"error_code": 1000,
+	"list_id": 100,
+	"publish_time": 1486450910000,
+	"category_list": ["时尚蒸菜",
+	"营养靓汤",
+	"特色小菜",
+	"干锅",
+	"主食",
+	"时尚饮品",
+	"酒水",
+	"套餐"],
+	"product_list": [{
+		"id": 100,
+		"name": "糯香大排",
+		"description": "这个是商品的描述",
+		"price": "45",
+		"url": "1.png",
+		"group": 1,
+		"unitstring": "份",
+		"category": 0,
+		"mode": 1,
+		"exist": "true",
+		"specs": [{
+			"spec": "大份",
+			"price": 140
+		},
+		{
+			"spec": "中份",
+			"price": "120"
+		},
+		{
+			"spec": "小份",
+			"price": "100"
+		}],
+		"mark": ["少糖",
+		"微辣",
+		"特辣"]
+	},
+	{
+		"id": 101,
+		"name": "清蒸鲜糖",
+		"description": "这个是商品的描述",
+		"price": "36",
+		"url": "1.png",
+		"group": 2,
+		"unitstring": "份",
+		"category": 0,
+		"mode": 0,
+		"exist": "true",
+		"specs": [{
+			"spec": "大份",
+			"price": 140
+		},
+		{
+			"spec": "中份",
+			"price": "120"
+		},
+		{
+			"spec": "小份",
+			"price": "100"
+		}],
+		"mark": ["少糖",
+		"微辣",
+		"特辣"]
+	},
+	{
+		"id": 102,
+		"name": "芙蓉真水蛋",
+		"description": "这个是商品的描述",
+		"price": "18",
+		"url": "1.png",
+		"group": 2,
+		"unitstring": "份",
+		"category": 0,
+		"mode": 0,
+		"exist": "true",
+		
+	},
+	{
+		"id": 103,
+		"name": "剁椒金针菇",
+		"description": "这个是商品的描述",
+		"price": "22",
+		"url": "1.png",
+		"group": 2,
+		"unitstring": "份",
+		"category": 0,
+		"mode": 0,
+		"exist": "true",
+		
+	},
+	{
+		"id": 104,
+		"name": "海峡大排骨",
+		"description": "这个是商品的描述",
+		"price": "22",
+		"url": "1.png",
+		"group": 2,
+		"unitstring": "份",
+		"category": 1,
+		"mode": 0,
+		"exist": "true",
+		
+	},
+	{
+		"id": 105,
+		"name": "虫草花排骨",
+		"description": "这个是商品的描述",
+		"price": "34",
+		"url": "1.png",
+		"group": 2,
+		"unitstring": "份",
+		"category": 1,
+		"mode": 0,
+		"exist": "true",
+		
+	},
+	{
+		"id": 106,
+		"name": "鱼头豆腐汤",
+		"description": "这个是商品的描述",
+		"price": "34",
+		"url": "1.png",
+		"group": 2,
+		"unitstring": "份",
+		"category": 1,
+		"mode": 0,
+		"exist": "true",
+		
+	},
+	{
+		"id": 107,
+		"name": "小木耳",
+		"description": "这个是商品的描述",
+		"price": "8",
+		"url": "1.png",
+		"group": 2,
+		"unitstring": "份",
+		"category": 2,
+		"mode": 0,
+		"exist": "true",
+		
+	},
+	{
+		"id": 108,
+		"name": "果仁菠菜",
+		"description": "这个是商品的描述",
+		"price": "10",
+		"url": "1.png",
+		"group": 2,
+		"unitstring": "份",
+		"category": 2,
+		"mode": 0,
+		"exist": "true",
+		
+	},
+	{
+		"id": 109,
+		"name": "酸菜黄瓜",
+		"description": "这个是商品的描述",
+		"price": "8",
+		"url": "1.png",
+		"group": 2,
+		"unitstring": "份",
+		"category": 2,
+		"mode": 0,
+		"exist": "true",
+		
+	},
+	{
+		"id": 110,
+		"name": "蕨根粉",
+		"description": "这个是商品的描述",
+		"price": "20",
+		"url": "1.png",
+		"group": 2,
+		"unitstring": "份",
+		"category": 2,
+		"mode": 0,
+		"exist": "true",
+		
+	},
+	{
+		"id": 111,
+		"name": "花生米",
+		"description": "这个是商品的描述",
+		"price": "8",
+		"url": "1.png",
+		"group": 2,
+		"unitstring": "份",
+		"category": 2,
+		"mode": 0,
+		"exist": "true",
+		
+	},
+	{
+		"id": 112,
+		"name": "长寿菜",
+		"description": "这个是商品的描述",
+		"price": "12",
+		"url": "1.png",
+		"group": 2,
+		"unitstring": "份",
+		"category": 2,
+		"mode": 0,
+		"exist": "true",
+		
+	},
+	{
+		"id": 113,
+		"name": "里脊",
+		"description": "这个是商品的描述",
+		"price": "8",
+		"url": "1.png",
+		"group": 2,
+		"unitstring": "份",
+		"category": 2,
+		"mode": 0,
+		"exist": "true",
+		
+	},
+	{
+		"id": 114,
+		"name": "花生",
+		"description": "这个是商品的描述",
+		"price": "8",
+		"url": "1.png",
+		"group": 2,
+		"unitstring": "份",
+		"category": 2,
+		"mode": 0,
+		"exist": "true",
+		
+	},
+	{
+		"id": 115,
+		"name": "羊肉汤",
+		"description": "这个是商品的描述",
+		"price": "8",
+		"url": "1.png",
+		"group": 2,
+		"unitstring": "份",
+		"category": 3,
+		"mode": 0,
+		"exist": "true",
+		
+	},
+	{
+		"id": 116,
+		"name": "铁板",
+		"description": "这个是商品的描述",
+		"price": "8",
+		"url": "1.png",
+		"group": 2,
+		"unitstring": "份",
+		"category": 3,
+		"mode": 0,
+		"exist": "true",
+		
+	},
+	{
+		"id": 117,
+		"name": "有机菜花",
+		"description": "这个是商品的描述",
+		"price": "8",
+		"url": "1.png",
+		"group": 2,
+		"unitstring": "份",
+		"category": 3,
+		"mode": 0,
+		"exist": "true",
+		
+	},
+	{
+		"id": 118,
+		"name": "馒头",
+		"description": "这个是商品的描述",
+		"price": "8",
+		"url": "1.png",
+		"group": 2,
+		"unitstring": "份",
+		"category": 4,
+		"mode": 0,
+		"exist": "true",
+		
+	},
+	{
+		"id": 119,
+		"name": "炒饭",
+		"description": "这个是商品的描述",
+		"price": "8",
+		"url": "1.png",
+		"group": 2,
+		"unitstring": "份",
+		"category": 4,
+		"mode": 0,
+		"exist": "true",
+		
+	},
+	{
+		"id": 120,
+		"name": "杂粮包",
+		"description": "这个是商品的描述",
+		"price": "8",
+		"url": "1.png",
+		"group": 2,
+		"unitstring": "份",
+		"category": 4,
+		"mode": 0,
+		"exist": "true",
+		
+	},
+	{
+		"id": 121,
+		"name": "可乐",
+		"description": "这个是商品的描述",
+		"price": "8",
+		"url": "1.png",
+		"group": 2,
+		"unitstring": "份",
+		"category": 4,
+		"mode": 0,
+		"exist": "true",
+		
+	},
+	{
+		"id": 122,
+		"name": "洛神",
+		"description": "这个是商品的描述",
+		"price": "8",
+		"url": "1.png",
+		"group": 2,
+		"unitstring": "杯",
+		"category": 5,
+		"mode": 0,
+		"exist": "true",
+		
+	},
+	{
+		"id": 123,
+		"name": "五米奶茶",
+		"description": "这个是商品的描述",
+		"price": "8",
+		"url": "1.png",
+		"group": 2,
+		"unitstring": "杯",
+		"category": 5,
+		"mode": 0,
+		"exist": "true",
+		
+	},
+	{
+		"id": 124,
+		"name": "可可奶茶",
+		"description": "这个是商品的描述",
+		"price": "8",
+		"url": "1.png",
+		"group": 2,
+		"unitstring": "杯",
+		"category": 5,
+		"mode": 0,
+		"exist": "true",
+		
+	},
+	{
+		"id": 125,
+		"name": "日式奶茶",
+		"description": "这个是商品的描述",
+		"price": "8",
+		"url": "1.png",
+		"group": 2,
+		"unitstring": "杯",
+		"category": 5,
+		"mode": 0,
+		"exist": "true",
+		
+	},
+	{
+		"id": 126,
+		"name": "红枣奶茶",
+		"description": "这个是商品的描述",
+		"price": "8",
+		"url": "1.png",
+		"group": 2,
+		"unitstring": "杯",
+		"category": 5,
+		"mode": 0,
+		"exist": "true",
+		
+	},
+	{
+		"id": 127,
+		"name": "江小白",
+		"description": "这个是商品的描述",
+		"price": "8",
+		"url": "1.png",
+		"group": 2,
+		"unitstring": "瓶",
+		"category": 6,
+		"mode": 0,
+		"exist": "true",
+		
+	},
+	{
+		"id": 128,
+		"name": "燕京",
+		"description": "这个是商品的描述",
+		"price": "8",
+		"url": "1.png",
+		"group": 2,
+		"unitstring": "瓶",
+		"category": 6,
+		"mode": 0,
+		"exist": "true",
+		
+	},
+	{
+		"id": 129,
+		"name": "禁酒",
+		"description": "这个是商品的描述",
+		"price": "8",
+		"url": "1.png",
+		"group": 2,
+		"unitstring": "瓶",
+		"category": 6,
+		"mode": 0,
+		"exist": "true",
+		
+	},
+	{
+		"id": 130,
+		"name": "老白干",
+		"description": "这个是商品的描述",
+		"price": "8",
+		"url": "1.png",
+		"group": 2,
+		"unitstring": "瓶",
+		"category": 6,
+		"mode": 0,
+		"exist": "true",
+		
+	},
+	{
+		"id": 131,
+		"name": "满汉全席",
+		"description": "这个是商品的描述",
+		"price": "8",
+		"url": "1.png",
+		"group": 2,
+		"unitstring": "瓶",
+		"category": 7,
+		"mode": 0,
+		"exist": "true",
+		
+	},
+	{
+		"id": 132,
+		"name": "三人套餐",
+		"description": "这个是商品的描述",
+		"price": "8",
+		"url": "1.png",
+		"group": 2,
+		"unitstring": "瓶",
+		"category": 7,
+		"mode": 0,
+		"exist": "true",
+		
+	}]
 }
