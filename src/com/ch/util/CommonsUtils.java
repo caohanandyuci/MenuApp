@@ -60,4 +60,16 @@ public class CommonsUtils {
         }  
 		return t;
 	}
+	public static void saveParamsToSharePreference(Context ctx, HashMap<String, String> params, String name) {
+		SharedPreferences sp = ctx.getSharedPreferences(name, Context.MODE_PRIVATE);
+		for (Entry<String, String> entry: params.entrySet()) {
+			sp.edit().putString(entry.getKey(), entry.getValue()).commit();
+		}
+	}
+	
+	public static HashMap<String, String> readParamsFromSharePerefence(Context ctx, String name) {
+		SharedPreferences sp = ctx.getSharedPreferences(name, Context.MODE_PRIVATE);
+		HashMap<String, String> params = (HashMap<String, String>) sp.getAll();
+		return params;
+	}
 }
