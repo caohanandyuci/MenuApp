@@ -21,6 +21,140 @@ public class FIleUtils {
 	
 	private final static String TAG = "FileUtils";
 	
+	public static boolean isExist(String path) {
+		return ((File) new File(path)).exists();
+	}
+	
+	public static boolean isEmpty(String path) {
+		if (isExist(path)) {
+			File f = new File(path);
+			return f.length() == 0;
+		}
+		else
+			return true;
+	}
+	
+	public static boolean delete(String path) {
+		try {
+			return new File(path).delete();
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return false;
+	}
+		
+	public static boolean deleteFile(File file) {
+		Log.d(TAG, "delete: " + file.getAbsolutePath());
+		boolean isDelete = false;
+		if (file.exists()) { // 判断文件是否存在
+			if (file.isFile()) { // 判断是否是文件
+				isDelete &= file.delete(); // delete()方法 ;
+			} else if (file.isDirectory()) { // 否则如果它是一个目录
+				File files[] = file.listFiles(); // 声明目录下所有的文件 files[];
+				for (int i = 0; i < files.length; i++) { // 遍历目录下所有的文件
+					isDelete &= deleteFile(files[i]); // 把每个文件 用这个方法进行迭代
+				}
+			}
+			isDelete &= file.delete();
+		} else {
+			Log.d(TAG, "delete file not exist: " + file.getPath());
+		}
+		return isDelete;
+	}
+	
+	public static boolean StringToFile(String res, String filePath) { 
+		try {
+			(new File(filePath)).delete();
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+    	File distFile = new File(filePath); 
+        if (!distFile.getParentFile().exists()){ 
+        	distFile.getParentFile().mkdirs(); 
+        }
+        try {
+        	distFile.createNewFile();
+	        BufferedWriter bufferedWriter = new BufferedWriter(new FileWriter(filePath));
+	        bufferedWriter.write(res);
+	        bufferedWriter.flush();
+	        bufferedWriter.close();
+		} catch (IOException e) {
+			e.printStackTrace();
+			return false;
+		}
+       return true; 
+    }
+	
+	 public static String FileToString(String filePath) { 
+	        File file = new File(filePath);
+	        if(!file.exists()){
+	        	return null;
+	        }
+	        StringBuilder sb = new StringBuilder();  
+	        try {
+	        	BufferedReader bufferedReader = new BufferedReader(new FileReader(file));
+	        	String line;
+				while((line=bufferedReader.readLine())!=null){  
+				    sb.append(line);  
+				}
+				bufferedReader.close();
+			} catch (IOException e) {
+				e.printStackTrace();
+			} 
+
+	        return sb.toString();  
+	    }
+	
+		public static boolean writeToFile(File file,String data){
+			
+			if(file == null || TextUtils.isEmpty(data)) {
+				return false;
+			}
+			FileOutputStream outStream = null;
+			try {
+				outStream = new FileOutputStream(file, true);
+				outStream.write(data.getBytes(HTTP.UTF_8));
+				return true;
+			}catch (FileNotFoundException e) {
+				e.printStackTrace();
+			}catch (Exception e) {
+				e.printStackTrace();
+			}finally{
+				try {
+					if(outStream!=null){
+						outStream.flush();
+						outStream.close();
+					}
+				} catch (IOException e) {
+					e.printStackTrace();
+				}   
+			}
+			
+			return false;
+		}
+		
+		public static FileInputStream readFiles(String absolutePath){
+			if(TextUtils.isEmpty(absolutePath)){
+				return null;
+			}
+			File file = new File(absolutePath);
+			if(!file.exists() || file.isDirectory()){
+				return null;
+			}
+			FileInputStream inStream = null;
+			try {
+				inStream = new FileInputStream(file);
+				return inStream;
+			} catch (FileNotFoundException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}catch (Exception e) {
+				// TODO: handle exception
+	    		e.printStackTrace();
+			}
+			return null;
+		}
+	
 	public static void SaveOrder(Context context, List<Order> orders) {
 		String filenameString = "";
 		
