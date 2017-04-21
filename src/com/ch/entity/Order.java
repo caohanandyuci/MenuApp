@@ -14,9 +14,9 @@ public class Order {
 	//下单时间
 	public long time = 0L;
 	
-	public List<String> mMarkList = null;
+	public int SpecId = -1;
 	
-	public int MarkId = -1;
+	public int[] remark = {0,0,0};
 	
 	public String mCommentString = "";
 }
