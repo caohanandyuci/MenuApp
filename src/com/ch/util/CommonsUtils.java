@@ -16,6 +16,10 @@ import android.util.Log;
 public class CommonsUtils {
 	private static Gson gson = new Gson();
 	private static String TAG = "CommonsUtils";
+	
+	public static String ObjectToString(Object object){
+		return gson.toJson(object);
+	}
 	public static FileInputStream openFileInputStream(String filename){
 		if(filename!=null){
 			File file = new File(filename);
